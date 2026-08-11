@@ -24,6 +24,7 @@ import json
 import math
 import re
 import statistics
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -196,9 +197,16 @@ def normalized(text: object) -> str:
 
 
 def peak_working_set_mib() -> float | None:
-    """Return process peak RAM on Windows without allocation tracing overhead."""
+    """Return process peak RAM without allocation-tracing overhead."""
     if not hasattr(ctypes, "windll"):
-        return None
+        try:
+            import resource
+        except ImportError:
+            return None
+        peak = float(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+        # macOS reports bytes; Linux and the BSDs report KiB.
+        divisor = 1024 * 1024 if sys.platform == "darwin" else 1024
+        return peak / divisor if peak > 0 else None
 
     class ProcessMemoryCounters(ctypes.Structure):
         _fields_ = [

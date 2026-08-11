@@ -89,7 +89,7 @@ class UMD39BenchmarkAdapterTests(unittest.TestCase):
         ones = [1.0]
         self.assertAlmostEqual(_force(ones, ones, ones, ones, ones, ones, ones)[0], 1.0)
 
-    def test_peak_memory_probe_works_on_windows(self) -> None:
+    def test_peak_memory_probe_is_available(self) -> None:
         value = peak_working_set_mib()
         self.assertIsNotNone(value)
         self.assertGreater(value or 0.0, 0.0)
