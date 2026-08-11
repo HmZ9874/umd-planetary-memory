@@ -6,6 +6,16 @@
 
 [中文完整白皮书](#中文完整白皮书) · [English full white paper](#english-full-white-paper) · [Source](#代码与复现) · [Results](#公开成绩) · [Limitations](#诚实边界与已知限制)
 
+## Formula inventory / 公式总览
+
+| Published on this README / 已在首页公开 | Count / 数量 |
+|---|---:|
+| Independent mathematical relations / 独立数学关系 | **28** |
+| Core algorithm formula families / 核心算法公式族 | **9** |
+| Evaluation metric formulas / 评估指标公式 | **4** |
+
+Every relation has a stable identifier from `UMD-F001` to `UMD-F028`. The first 24 relations form nine algorithm families; the last four define evaluation. The complete bilingual registry appears below. / 每条关系都有 `UMD-F001` 至 `UMD-F028` 的稳定编号；前 24 条组成九个算法公式族，最后四条定义评估指标。完整中英文注册表见下文。
+
 ---
 
 # 中文完整白皮书
@@ -119,6 +129,70 @@ flowchart LR
 | 3.28/3.28.2 | 多轨检索、正式冻结考试与持续优化 | `benchmarks/umd3282_*` |
 | 3.29 | 增量边际覆盖、查询不变量和共享状态缓存，保持排序等价 | `benchmarks/umd329_performance_test.py` |
 | 3.30 | 版本化事实图、三跳引力弹弓、回声小行星带 | `benchmarks/umd330_adapter.py` |
+
+### 5.0 中文公式注册表：28 个独立关系
+
+下面的“关系”包括评分方程、集合关系、分段状态函数、版本选择规则和指标定义。它们按九个核心算法族组织；同一公式在后文出现的数值展开不重复计数。
+
+#### 公式族 1：归一化与排名融合（3 条）
+
+1. **UMD-F001 — 最大值归一化**：`unit(x_i) = x_i / max_j(x_j)`；当最大值不大于零时结果为 `0`。把不同检索场转换到可融合尺度。
+2. **UMD-F002 — 倒数排名**：`RR_i = 1 / (1 + rank_i)`。把离散名次转换为平滑、单调递减的排名质量。
+3. **UMD-F003 — 词法/行星种子**：`Seed_i = RR_lexical(i) + 0.72 × RR_planet(group_i)`。在原子词法命中和会话/主题层级之间建立初始轨道。
+
+#### 公式族 2：七场基础引力与状态质量（3 条）
+
+4. **UMD-F004 — 七场基础引力**：`F_i = 0.34S_i + 0.22L_i + 0.16P_i + 0.08C_i + 0.08E_i + 0.06T_i + 0.06G_i`。融合语义 `S`、BM25 `L`、层级 `P`、字符 `C`、实体 `E`、时间 `T` 和图通量 `G`。
+5. **UMD-F005 — 状态质量分段函数**：`Δstate_i ∈ {−0.18 negative, +0.08 positive, −0.04 mixed, 0 neutral}`。区分当前有效事实、失效事实和变化过程。
+6. **UMD-F006 — 状态修正引力**：`F_state(i) = max(0, F_i + Δstate_i)`。保证负修正不会产生负检索质量；历史模式令 `Δstate=0`。
+
+#### 公式族 3：事件卫星与星座边际覆盖（7 条）
+
+7. **UMD-F007 — 事件卫星分数**：`Event_i = 0.46F_i + 0.30S_i + 0.14L_i + 0.06/(1+rank_i) + 0.04I[new_group]`。选择锚点以外的补充证据。
+8. **UMD-F008 — 集合基础相关性**：`B_i = 0.44unit(F_i) + 0.36unit(S_i) + 0.20unit(L_i)`。为集合覆盖建立基础质量。
+9. **UMD-F009 — 查询覆盖率**：`query_coverage_i = |T_i ∩ Q| / max(1, |Q|)`。测量候选词元覆盖查询的比例。
+10. **UMD-F010 — 新颖度**：`novel_i(t) = |T_i − C_t| / max(1, |T_i|)`。奖励尚未覆盖的信息。
+11. **UMD-F011 — 冗余度**：`redundancy_i(t) = |T_i ∩ C_t| / max(1, |T_i ∪ C_t|)`。惩罚与已选证据重复的内容。
+12. **UMD-F012 — 星座覆盖总分**：`Coverage_i(t) = B_i + 0.10query_coverage + 0.09I[new_entity] + 0.07I[new_group] + 0.04I[new_date] + 0.08novel − 0.13redundancy`。在相关性、实体/组/日期多样性和冗余之间优化。
+13. **UMD-F013 — 增量重叠更新**：`o_i(t+1) = o_i(t) + Σ I[x ∈ T_i], x ∈ (T_selected − C_t)`。UMD 3.29 用 postings 增量更新替代重复集合复制，同时保持排序等价。
+
+#### 公式族 4：指令与偏好引力（2 条）
+
+14. **UMD-F014 — 指令适用性**：`applicability = clip(0.58 × lexical_overlap + 0.42 × family_match, floor, 1)`。只有主题和指令族接触时才激活桥接。
+15. **UMD-F015 — 指令瞬态加成**：`directive_bonus = 0.24 + 0.14 × applicability`。指令 floor 为 `0.45`，偏好 floor 为 `0.30`；历史/多证据模式关闭。
+
+#### 公式族 5：胶囊构造与前缀守恒（2 条）
+
+16. **UMD-F016 — 来源胶囊**：`C_k = stable_anchor_k ∪ striped_satellites_k`。一个 Final 排名单元同时携带稳定锚点和条带卫星。
+17. **UMD-F017 — 前缀守恒**：`Sources_old(@k) ⊆ Sources_new(@k)`。新优化只能追加证据，不能移除受保护的旧 top-k 命中。
+
+#### 公式族 6：反物质答案/审计双轨（2 条）
+
+18. **UMD-F018 — 当前答案轨道**：`Answer(C) = C − NegativeSourceIDs`。从当前答案排除明确失效、取消或删除的来源。
+19. **UMD-F019 — 审计轨道**：`Audit(C) = C`。完整保留正负版本，使历史仍可追溯。
+
+#### 公式族 7：版本化事实图（2 条）
+
+20. **UMD-F020 — 编号事实定义**：`e = (subject, relation, object, ordinal, provenance)`。把事实、版本顺序和来源绑定为不可变图边。
+21. **UMD-F021 — 当前可见边**：`e_current(s,r,t) = argmax ordinal(e), source(e) < t`。在可见前缀内选择同一主语/关系的最新版本。
+
+#### 公式族 8：银河 Census（1 条）
+
+22. **UMD-F022 — Census 聚合质量**：`Census_i = 0.37L_i + 0.20F_i + 0.13S_i + 0.22contact_i + 0.02min(4, exact_i) + 0.06I[positive]`。为“列出全部”、计数、统计和推荐建立大集合轨道；非历史失效事实再减 `2.0`。
+
+#### 公式族 9：引力弹弓与回声扩展（2 条）
+
+23. **UMD-F023 — 多跳路径能量**：`Energy(path) = Σ[0.20 + min(3, contact(q,r)/5)] + 6 × I[last_relation ∈ target(q)]`。最多三跳，强奖励命中目标关系的终点路径。
+24. **UMD-F024 — 回声集合**：`Echo(a) = {i | casefold(a) 是 casefold(text_i) 的子串}`。使用系统预测对象而非 gold 标签追加最多 96 个证据来源。
+
+#### 四个评估指标公式（4 条）
+
+25. **UMD-F025 — Any Recall**：`Any R@k = mean(I[Y ∩ R_k ≠ ∅])`。至少找回一个 gold 来源的问题比例。
+26. **UMD-F026 — Full Recall**：`Full R@k = mean(I[Y ⊆ R_k])`。完整找回全部 gold 来源的问题比例。
+27. **UMD-F027 — Micro Recall**：`Micro R@k = Σ|Y ∩ R_k| / Σ|Y|`。跨问题按来源数量加权的总体召回。
+28. **UMD-F028 — MRR**：`MRR = mean(1 / rank(first gold retrieval unit))`。第一个 gold 检索单元倒数名次的平均值。
+
+计数校验：`3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 = 24` 个算法关系；`24 + 4 = 28` 个独立数学关系。
 
 ### 5.1 词法、层级与归一化
 
@@ -491,6 +565,70 @@ Forgetting therefore updates state, versioned edges, indexes, caches, WAL, answe
 | 3.28/3.28.2 | multi-orbit retrieval and frozen formal exam | `benchmarks/umd3282_*` |
 | 3.29 | incremental marginal coverage and shared query-state caches with rank equivalence | `benchmarks/umd329_performance_test.py` |
 | 3.30 | versioned fact graph, three-hop slingshot, echo asteroid belt | `benchmarks/umd330_adapter.py` |
+
+### 5.0 English formula registry: 28 independent relations
+
+“Relation” includes scoring equations, set relations, piecewise state functions, version-selection rules, and metric definitions. The first 24 relations form nine core algorithm families; worked numeric expansions later in the README are not counted again.
+
+#### Family 1: normalization and rank fusion (3)
+
+1. **UMD-F001 — Max normalization**: `unit(x_i) = x_i / max_j(x_j)`, or `0` when the maximum is non-positive. Places heterogeneous retrieval fields on a fusible scale.
+2. **UMD-F002 — Reciprocal rank**: `RR_i = 1 / (1 + rank_i)`. Converts a discrete rank into a smooth monotone quality signal.
+3. **UMD-F003 — Lexical/planet seed**: `Seed_i = RR_lexical(i) + 0.72 × RR_planet(group_i)`. Establishes the initial orbit from atomic lexical and session/topic hierarchy ranks.
+
+#### Family 2: seven-field gravity and state mass (3)
+
+4. **UMD-F004 — Seven-field gravity**: `F_i = 0.34S_i + 0.22L_i + 0.16P_i + 0.08C_i + 0.08E_i + 0.06T_i + 0.06G_i`. Fuses semantics `S`, BM25 `L`, hierarchy `P`, characters `C`, entities `E`, time `T`, and graph flux `G`.
+5. **UMD-F005 — Piecewise state mass**: `Δstate_i ∈ {−0.18 negative, +0.08 positive, −0.04 mixed, 0 neutral}`. Separates current, invalid, and transitional facts.
+6. **UMD-F006 — State-adjusted gravity**: `F_state(i) = max(0, F_i + Δstate_i)`. Prevents a negative retrieval mass; historical mode sets `Δstate=0`.
+
+#### Family 3: event satellites and marginal constellation coverage (7)
+
+7. **UMD-F007 — Event satellite score**: `Event_i = 0.46F_i + 0.30S_i + 0.14L_i + 0.06/(1+rank_i) + 0.04I[new_group]`. Selects supporting evidence outside stable anchors.
+8. **UMD-F008 — Set base relevance**: `B_i = 0.44unit(F_i) + 0.36unit(S_i) + 0.20unit(L_i)`. Establishes base quality for set coverage.
+9. **UMD-F009 — Query coverage**: `query_coverage_i = |T_i ∩ Q| / max(1, |Q|)`. Measures how much of the query is represented by candidate tokens.
+10. **UMD-F010 — Novelty**: `novel_i(t) = |T_i − C_t| / max(1, |T_i|)`. Rewards information not covered yet.
+11. **UMD-F011 — Redundancy**: `redundancy_i(t) = |T_i ∩ C_t| / max(1, |T_i ∪ C_t|)`. Penalizes overlap with selected evidence.
+12. **UMD-F012 — Total constellation coverage**: `Coverage_i(t) = B_i + 0.10query_coverage + 0.09I[new_entity] + 0.07I[new_group] + 0.04I[new_date] + 0.08novel − 0.13redundancy`. Balances relevance, entity/group/date diversity, novelty, and redundancy.
+13. **UMD-F013 — Incremental overlap update**: `o_i(t+1) = o_i(t) + Σ I[x ∈ T_i], x ∈ (T_selected − C_t)`. UMD 3.29 replaces repeated set copies with incremental postings while preserving order.
+
+#### Family 4: directive and preference gravity (2)
+
+14. **UMD-F014 — Directive applicability**: `applicability = clip(0.58 × lexical_overlap + 0.42 × family_match, floor, 1)`. Activates only with topic and directive-family contact.
+15. **UMD-F015 — Transient directive bonus**: `directive_bonus = 0.24 + 0.14 × applicability`. The floor is `0.45` for instructions and `0.30` for preferences; history and multi-evidence modes disable it.
+
+#### Family 5: capsule construction and prefix conservation (2)
+
+16. **UMD-F016 — Provenance capsule**: `C_k = stable_anchor_k ∪ striped_satellites_k`. One Final rank carries a stable anchor plus striped evidence satellites.
+17. **UMD-F017 — Prefix conservation**: `Sources_old(@k) ⊆ Sources_new(@k)`. New optimization may append evidence but cannot remove protected old top-k hits.
+
+#### Family 6: antimatter answer/audit orbits (2)
+
+18. **UMD-F018 — Current-answer orbit**: `Answer(C) = C − NegativeSourceIDs`. Removes invalidated, cancelled, or deleted sources from current answers.
+19. **UMD-F019 — Audit orbit**: `Audit(C) = C`. Retains positive and negative versions for historical traceability.
+
+#### Family 7: versioned fact graph (2)
+
+20. **UMD-F020 — Numbered fact definition**: `e = (subject, relation, object, ordinal, provenance)`. Binds the fact, version order, and source into an immutable graph edge.
+21. **UMD-F021 — Current visible edge**: `e_current(s,r,t) = argmax ordinal(e), source(e) < t`. Selects the latest subject/relation version visible inside prefix `t`.
+
+#### Family 8: galactic census (1)
+
+22. **UMD-F022 — Census aggregate mass**: `Census_i = 0.37L_i + 0.20F_i + 0.13S_i + 0.22contact_i + 0.02min(4, exact_i) + 0.06I[positive]`. Builds the large-set orbit for list-all, count, aggregate, and recommendation queries; invalid nonhistorical facts receive another `−2.0`.
+
+#### Family 9: gravitational slingshot and echo expansion (2)
+
+23. **UMD-F023 — Multi-hop path energy**: `Energy(path) = Σ[0.20 + min(3, contact(q,r)/5)] + 6 × I[last_relation ∈ target(q)]`. Traverses at most three hops and strongly rewards a terminal target-relation match.
+24. **UMD-F024 — Echo set**: `Echo(a) = {i | casefold(a) is a substring of casefold(text_i)}`. Uses the system-predicted object, never gold labels, to append at most 96 evidence sources.
+
+#### Four evaluation metric formulas (4)
+
+25. **UMD-F025 — Any Recall**: `Any R@k = mean(I[Y ∩ R_k ≠ ∅])`. Fraction of questions retrieving at least one gold source.
+26. **UMD-F026 — Full Recall**: `Full R@k = mean(I[Y ⊆ R_k])`. Fraction of questions retrieving the complete gold source set.
+27. **UMD-F027 — Micro Recall**: `Micro R@k = Σ|Y ∩ R_k| / Σ|Y|`. Source-count-weighted recall across questions.
+28. **UMD-F028 — MRR**: `MRR = mean(1 / rank(first gold retrieval unit))`. Mean reciprocal rank of the first gold-bearing retrieval unit.
+
+Count invariant: `3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 = 24` algorithm relations; `24 + 4 = 28` independent mathematical relations.
 
 ### 5.1 Normalization and rank fusion
 
