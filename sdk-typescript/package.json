@@ -1,0 +1,17 @@
+{
+  "name": "@umd-memory/sdk",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TypeScript SDK for UMD Observatory",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.mjs"
+    }
+  },
+  "files": ["src"],
+  "engines": {"node": ">=18"},
+  "scripts": {"check": "node --check src/index.mjs"},
+  "license": "Apache-2.0"
+}
+

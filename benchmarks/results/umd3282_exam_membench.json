@@ -1,0 +1,74 @@
+{
+  "membench": {
+    "benchmark": "MemBench",
+    "status": "stratified_retrieval_proxy",
+    "sampling": "first 10 trajectories from each of 55 official groups",
+    "trajectories": 550,
+    "official_trajectory_count_local": 26637,
+    "final_capsule_retrieval": {
+      "evaluated_queries": 550,
+      "gold_evidence_items": 1718,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8928730158730159,
+      "any_evidence_recall": {
+        "1": 0.82,
+        "5": 0.9872727272727273,
+        "10": 0.9981818181818182
+      },
+      "full_evidence_recall": {
+        "1": 0.48727272727272725,
+        "5": 0.8018181818181818,
+        "10": 0.9418181818181818
+      },
+      "micro_evidence_recall": {
+        "1": 0.6949941792782305,
+        "5": 0.919091967403958,
+        "10": 0.9784633294528522
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 550,
+      "gold_evidence_items": 1718,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.7045638232830743,
+      "any_evidence_recall": {
+        "1": 0.5781818181818181,
+        "5": 0.8709090909090909,
+        "10": 0.9509090909090909
+      },
+      "full_evidence_recall": {
+        "1": 0.05818181818181818,
+        "5": 0.42,
+        "10": 0.6
+      },
+      "micro_evidence_recall": {
+        "1": 0.1850989522700815,
+        "5": 0.5157159487776485,
+        "10": 0.6920838183934808
+      }
+    },
+    "gold_used_for_ranking": false,
+    "official_end_to_end_accuracy_run": false,
+    "runtime_seconds": 94.72834770000009
+  },
+  "metadata": {
+    "adapter": "UMD 3.28.2 frozen exam",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 15839,
+      "cache_hits": 170,
+      "cache_misses": 15839,
+      "neural_calls": 15839,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

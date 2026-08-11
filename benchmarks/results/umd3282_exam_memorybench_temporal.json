@@ -1,0 +1,227 @@
+{
+  "memorybench_temporal": {
+    "benchmark": "MemoryBench",
+    "status": "official_dialsim_query_date_session_retrieval_proxy",
+    "datasets": [
+      "DialSim-bigbang",
+      "DialSim-friends",
+      "DialSim-theoffice"
+    ],
+    "questions": 51,
+    "dated_questions_with_matching_sessions": 51,
+    "by_dataset": {
+      "DialSim-bigbang": {
+        "questions": 17,
+        "dated_questions_with_matching_sessions": 17,
+        "sessions": 805,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 17,
+          "gold_evidence_items": 49,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.486764705882353,
+          "any_evidence_recall": {
+            "1": 0.29411764705882354,
+            "5": 0.8235294117647058,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.11764705882352941,
+            "5": 0.47058823529411764,
+            "10": 0.8823529411764706
+          },
+          "micro_evidence_recall": {
+            "1": 0.10204081632653061,
+            "5": 0.5102040816326531,
+            "10": 0.9387755102040817
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 17,
+          "gold_evidence_items": 49,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.19949610257653852,
+          "any_evidence_recall": {
+            "1": 0.11764705882352941,
+            "5": 0.23529411764705882,
+            "10": 0.23529411764705882
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.058823529411764705,
+            "10": 0.058823529411764705
+          },
+          "micro_evidence_recall": {
+            "1": 0.04081632653061224,
+            "5": 0.08163265306122448,
+            "10": 0.08163265306122448
+          }
+        },
+        "corpus_sha256": "cccf6488c8c518d1f48707176103c956b9b88a60cc8f13de516f92835e6db881",
+        "test_sha256": "29a6b48e0fa813158b6803b4a88ca657086ff0db170db95b9fbb5014a1b24f2e"
+      },
+      "DialSim-friends": {
+        "questions": 17,
+        "dated_questions_with_matching_sessions": 17,
+        "sessions": 788,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 17,
+          "gold_evidence_items": 73,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.48382352941176476,
+          "any_evidence_recall": {
+            "1": 0.29411764705882354,
+            "5": 0.7647058823529411,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.058823529411764705,
+            "5": 0.23529411764705882,
+            "10": 1.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.0821917808219178,
+            "5": 0.5205479452054794,
+            "10": 1.0
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 17,
+          "gold_evidence_items": 73,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.14570694835009185,
+          "any_evidence_recall": {
+            "1": 0.058823529411764705,
+            "5": 0.23529411764705882,
+            "10": 0.23529411764705882
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.0136986301369863,
+            "5": 0.0547945205479452,
+            "10": 0.0684931506849315
+          }
+        },
+        "corpus_sha256": "0499a353900a9cc3ce3bf01726a679443e12faa7c6a0873ba2d68e820b637f5e",
+        "test_sha256": "4d086580969a971d3b4e2d933c761179e5112beaa26199b3ab32cb888a2402ac"
+      },
+      "DialSim-theoffice": {
+        "questions": 17,
+        "dated_questions_with_matching_sessions": 17,
+        "sessions": 2347,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 17,
+          "gold_evidence_items": 418,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9607843137254903,
+          "any_evidence_recall": {
+            "1": 0.9411764705882353,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.11764705882352941,
+            "5": 0.11764705882352941,
+            "10": 0.23529411764705882
+          },
+          "micro_evidence_recall": {
+            "1": 0.20813397129186603,
+            "5": 0.5215311004784688,
+            "10": 0.8660287081339713
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 17,
+          "gold_evidence_items": 418,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.3938375350140056,
+          "any_evidence_recall": {
+            "1": 0.17647058823529413,
+            "5": 0.7647058823529411,
+            "10": 0.9411764705882353
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.007177033492822967,
+            "5": 0.05502392344497608,
+            "10": 0.09808612440191387
+          }
+        },
+        "corpus_sha256": "96857f239d48c01155778a77edfb5f1ba8e33cce27e1ed1f12ac0b7653cf4f81",
+        "test_sha256": "eaafa9ac0fb4d26fbbb55d2dcd92dc2884cf3e3b5480aa3c003e51f5265dd023"
+      }
+    },
+    "final_capsule_retrieval": {
+      "evaluated_queries": 51,
+      "gold_evidence_items": 540,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.6437908496732025,
+      "any_evidence_recall": {
+        "1": 0.5098039215686274,
+        "5": 0.8627450980392157,
+        "10": 1.0
+      },
+      "full_evidence_recall": {
+        "1": 0.09803921568627451,
+        "5": 0.27450980392156865,
+        "10": 0.7058823529411765
+      },
+      "micro_evidence_recall": {
+        "1": 0.1814814814814815,
+        "5": 0.5203703703703704,
+        "10": 0.8907407407407407
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 51,
+      "gold_evidence_items": 540,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.24634686198021197,
+      "any_evidence_recall": {
+        "1": 0.11764705882352941,
+        "5": 0.4117647058823529,
+        "10": 0.47058823529411764
+      },
+      "full_evidence_recall": {
+        "1": 0.0,
+        "5": 0.0196078431372549,
+        "10": 0.0196078431372549
+      },
+      "micro_evidence_recall": {
+        "1": 0.011111111111111112,
+        "5": 0.05740740740740741,
+        "10": 0.09259259259259259
+      }
+    },
+    "official_continual_learning_or_response_quality_run": false,
+    "hidden_gold_answer_used": false,
+    "runtime_seconds": 61.75191670000004
+  },
+  "metadata": {
+    "adapter": "UMD 3.28.2 continued frozen exam",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 1164,
+      "cache_hits": 0,
+      "cache_misses": 1164,
+      "neural_calls": 1164,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

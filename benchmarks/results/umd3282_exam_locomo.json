@@ -1,0 +1,300 @@
+{
+  "locomo": {
+    "benchmark": "LoCoMo",
+    "scope": "full 10 conversations",
+    "questions": 1986,
+    "questions_without_evidence": 4,
+    "final_capsule_retrieval": {
+      "evaluated_queries": 1982,
+      "gold_evidence_items": 2823,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.674676252943155,
+      "any_evidence_recall": {
+        "1": 0.5605449041372351,
+        "5": 0.8355196770938446,
+        "10": 0.9081735620585267
+      },
+      "full_evidence_recall": {
+        "1": 0.48234106962663975,
+        "5": 0.7346115035317861,
+        "10": 0.8218970736629667
+      },
+      "micro_evidence_recall": {
+        "1": 0.4452709883103082,
+        "5": 0.6925256818986893,
+        "10": 0.7789585547290117
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 1982,
+      "gold_evidence_items": 2823,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.4379794215034755,
+      "any_evidence_recall": {
+        "1": 0.2860746720484359,
+        "5": 0.6019172552976791,
+        "10": 0.7088799192734612
+      },
+      "full_evidence_recall": {
+        "1": 0.2386478304742684,
+        "5": 0.5161453077699294,
+        "10": 0.6059535822401615
+      },
+      "micro_evidence_recall": {
+        "1": 0.20085015940488843,
+        "5": 0.4445625221395678,
+        "10": 0.5391427559334042
+      }
+    },
+    "by_category": {
+      "1": {
+        "final": {
+          "evaluated_queries": 282,
+          "gold_evidence_items": 884,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.6380586513565237,
+          "any_evidence_recall": {
+            "1": 0.5283687943262412,
+            "5": 0.8049645390070922,
+            "10": 0.8581560283687943
+          },
+          "full_evidence_recall": {
+            "1": 0.17375886524822695,
+            "5": 0.33687943262411346,
+            "10": 0.40070921985815605
+          },
+          "micro_evidence_recall": {
+            "1": 0.3054298642533937,
+            "5": 0.5135746606334841,
+            "10": 0.5972850678733032
+          }
+        },
+        "strict": {
+          "evaluated_queries": 282,
+          "gold_evidence_items": 884,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.3299382352002387,
+          "any_evidence_recall": {
+            "1": 0.20921985815602837,
+            "5": 0.44680851063829785,
+            "10": 0.574468085106383
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.04964539007092199,
+            "10": 0.1099290780141844
+          },
+          "micro_evidence_recall": {
+            "1": 0.0667420814479638,
+            "5": 0.18778280542986425,
+            "10": 0.2703619909502262
+          }
+        }
+      },
+      "2": {
+        "final": {
+          "evaluated_queries": 321,
+          "gold_evidence_items": 375,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.6881422143104386,
+          "any_evidence_recall": {
+            "1": 0.5887850467289719,
+            "5": 0.8161993769470405,
+            "10": 0.8878504672897196
+          },
+          "full_evidence_recall": {
+            "1": 0.5420560747663551,
+            "5": 0.7507788161993769,
+            "10": 0.8598130841121495
+          },
+          "micro_evidence_recall": {
+            "1": 0.5413333333333333,
+            "5": 0.76,
+            "10": 0.856
+          }
+        },
+        "strict": {
+          "evaluated_queries": 321,
+          "gold_evidence_items": 375,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.5313398155138488,
+          "any_evidence_recall": {
+            "1": 0.4392523364485981,
+            "5": 0.6386292834890965,
+            "10": 0.7258566978193146
+          },
+          "full_evidence_recall": {
+            "1": 0.411214953271028,
+            "5": 0.5887850467289719,
+            "10": 0.6542056074766355
+          },
+          "micro_evidence_recall": {
+            "1": 0.376,
+            "5": 0.5626666666666666,
+            "10": 0.6426666666666667
+          }
+        }
+      },
+      "3": {
+        "final": {
+          "evaluated_queries": 92,
+          "gold_evidence_items": 208,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.3672403381642512,
+          "any_evidence_recall": {
+            "1": 0.25,
+            "5": 0.5434782608695652,
+            "10": 0.5978260869565217
+          },
+          "full_evidence_recall": {
+            "1": 0.14130434782608695,
+            "5": 0.2717391304347826,
+            "10": 0.3695652173913043
+          },
+          "micro_evidence_recall": {
+            "1": 0.12980769230769232,
+            "5": 0.2980769230769231,
+            "10": 0.38461538461538464
+          }
+        },
+        "strict": {
+          "evaluated_queries": 92,
+          "gold_evidence_items": 208,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.21943147462160786,
+          "any_evidence_recall": {
+            "1": 0.13043478260869565,
+            "5": 0.30434782608695654,
+            "10": 0.44565217391304346
+          },
+          "full_evidence_recall": {
+            "1": 0.08695652173913043,
+            "5": 0.16304347826086957,
+            "10": 0.20652173913043478
+          },
+          "micro_evidence_recall": {
+            "1": 0.057692307692307696,
+            "5": 0.14903846153846154,
+            "10": 0.22596153846153846
+          }
+        }
+      },
+      "4": {
+        "final": {
+          "evaluated_queries": 841,
+          "gold_evidence_items": 896,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7016934677160599,
+          "any_evidence_recall": {
+            "1": 0.5850178359096314,
+            "5": 0.8668252080856124,
+            "10": 0.9464922711058263
+          },
+          "full_evidence_recall": {
+            "1": 0.5600475624256838,
+            "5": 0.8466111771700356,
+            "10": 0.9334126040428062
+          },
+          "micro_evidence_recall": {
+            "1": 0.5569196428571429,
+            "5": 0.8459821428571429,
+            "10": 0.9330357142857143
+          }
+        },
+        "strict": {
+          "evaluated_queries": 841,
+          "gold_evidence_items": 896,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.45877501774820123,
+          "any_evidence_recall": {
+            "1": 0.2877526753864447,
+            "5": 0.6504161712247325,
+            "10": 0.7455410225921522
+          },
+          "full_evidence_recall": {
+            "1": 0.26872770511296074,
+            "5": 0.6266349583828775,
+            "10": 0.7193816884661117
+          },
+          "micro_evidence_recall": {
+            "1": 0.2700892857142857,
+            "5": 0.6238839285714286,
+            "10": 0.7220982142857143
+          }
+        }
+      },
+      "5": {
+        "final": {
+          "evaluated_queries": 446,
+          "gold_evidence_items": 460,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7006094739839135,
+          "any_evidence_recall": {
+            "1": 0.57847533632287,
+            "5": 0.8699551569506726,
+            "10": 0.9461883408071748
+          },
+          "full_evidence_recall": {
+            "1": 0.5582959641255605,
+            "5": 0.8587443946188341,
+            "10": 0.9439461883408071
+          },
+          "micro_evidence_recall": {
+            "1": 0.5608695652173913,
+            "5": 0.8608695652173913,
+            "10": 0.9434782608695652
+          }
+        },
+        "strict": {
+          "evaluated_queries": 446,
+          "gold_evidence_items": 460,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.44496651282970967,
+          "any_evidence_recall": {
+            "1": 0.2533632286995516,
+            "5": 0.6434977578475336,
+            "10": 0.7668161434977578
+          },
+          "full_evidence_recall": {
+            "1": 0.2399103139013453,
+            "5": 0.6233183856502242,
+            "10": 0.7533632286995515
+          },
+          "micro_evidence_recall": {
+            "1": 0.24565217391304348,
+            "5": 0.6260869565217392,
+            "10": 0.7565217391304347
+          }
+        }
+      }
+    },
+    "mean_retrieved_characters_at_10": {
+      "final": 9282.594272215223,
+      "strict": 1497.8824992193645
+    },
+    "data_sha256": "79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "gold_used_for_ranking": false,
+    "official_end_to_end_qa_run": false,
+    "runtime_seconds": 145.3854199999996
+  },
+  "metadata": {
+    "adapter": "UMD 3.28.2 frozen exam",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 7823,
+      "cache_hits": 12,
+      "cache_misses": 7823,
+      "neural_calls": 7823,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

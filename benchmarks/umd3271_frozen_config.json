@@ -1,0 +1,22 @@
+{
+  "version": "UMD 3.27.1",
+  "frozen_on": "2026-08-11",
+  "parent_retrieval": "UMD 3.27",
+  "changes_after_3_27_frozen_run": [
+    "fix nested old_* fact paths",
+    "add relative 30-day step phases",
+    "use full-period expense sums",
+    "add structured-ledger fast path for census queries"
+  ],
+  "ledger_fallback_sources": 48,
+  "ranking_uses_gold": false,
+  "required_reporting": [
+    "atomic capsule metrics",
+    "singularity capsule metrics",
+    "fast path rate",
+    "deterministic answer accuracy",
+    "exact fact contamination",
+    "runtime and compact payload size"
+  ],
+  "disclosure": "Memora is a regression set already inspected during development; a new external dataset is still required for a statistically independent blind score."
+}

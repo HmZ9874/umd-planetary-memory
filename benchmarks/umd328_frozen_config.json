@@ -1,0 +1,22 @@
+{
+  "version": "UMD 3.28",
+  "frozen_on": "2026-08-11",
+  "parent": "UMD 3.27.1",
+  "changes": [
+    "prefix-safe mutable-state folding by semantic identity",
+    "query-specific expense and preference-domain filtering",
+    "calendar liveness from the latest state while conserving creation provenance",
+    "strict singleton-source, state-sector, and legacy-striped retrieval metrics"
+  ],
+  "ledger_fallback_sources": 48,
+  "strict_atom_definition": "exactly one immutable source per capsule",
+  "state_sector_definition": "all query-matched live state sources, excluding fallback sources",
+  "ranking_uses_gold": false,
+  "development_personas": [
+    "persona index 0 per monthly, quarterly, and weekly period"
+  ],
+  "pre_full_holdout_personas": [
+    "persona index 9 per monthly, quarterly, and weekly period"
+  ],
+  "disclosure": "The Memora corpus was inspected during development. The full result is a frozen regression, not a statistically independent blind score."
+}
