@@ -1,0 +1,45 @@
+{
+  "protocol": "UMD 3.28.2 continued frozen gold-blind retrieval exam",
+  "frozen_at": "2026-08-11",
+  "rules": {
+    "parameter_changes_after_first_scored_run": false,
+    "gold_used_for_ranking": false,
+    "answer_or_relevance_read_after_retrieval": true,
+    "paid_api_calls": 0,
+    "answer_model": null,
+    "judge_model": null,
+    "proxy_scores_must_not_be_called_official_end_to_end_scores": true
+  },
+  "retriever": {
+    "neural_candidate_pool": 64,
+    "physics_v316": true,
+    "physics_v317": true,
+    "physics_v325": true,
+    "physics_v326": true,
+    "physics_v327": true,
+    "first_orbit_v316": false,
+    "encoder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "dimensions": 384
+  },
+  "text_segmentation": {
+    "memoryagentbench_chunk_chars": 1200,
+    "memoryagentbench_overlap_chars": 200,
+    "evermembench_unit": "one date-by-group conversation session",
+    "memorybench_unit": "one dated DialSim session",
+    "memoryarena_unit": "one completed prior subtask and successful observation",
+    "longmemeval_v2_unit": "one full multimodal trajectory serialized without screenshots"
+  },
+  "capacity_tiers": {
+    "MemoryAgentBench": "contexts with at most 600 fixed chunks",
+    "EverMemBench": "50 questions sampled at uniform positions from each of five datasets",
+    "LongMemEval-V2": "50 questions sampled at uniform positions from each of two small-tier haystacks; goal/action/thought notes are indexed"
+  },
+  "benchmarks": {
+    "MemoryAgentBench": "answer-bearing passage retrieval for Accurate Retrieval and Conflict Resolution only",
+    "EverMemBench": "answer-bearing date-by-group retrieval on five English dynamic group-chat datasets",
+    "MemoryBench": "answer-bearing session retrieval on the three DialSim datasets",
+    "MemoryArena": "prior-subtask answer-component reuse retrieval; not environment success",
+    "LongMemEval-V2": "small-tier answer-bearing trajectory retrieval; not reader accuracy or LAFS"
+    ,"MemoryBench-temporal": "retrieve the historical session date explicitly stated in each DialSim question; no hidden answer label"
+  }
+}

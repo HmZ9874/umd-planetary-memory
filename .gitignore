@@ -1,0 +1,66 @@
+# Python / local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.model-cache/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Databases, logs and generated runtime state
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+*.log
+*.err
+*.out
+
+# Model/training artifacts
+*.joblib
+*.npz
+*.onnx
+*.safetensors
+*.bin
+
+# Third-party benchmark repositories and datasets are not redistributed.
+benchmarks/data/
+benchmarks/data_exam/
+benchmarks/vendor/
+benchmarks/vendor_exam/
+benchmarks/**/*.tar
+benchmarks/**/*.zip
+benchmarks/**/*.parquet
+benchmarks/**/*.arrow
+
+# Publish only audited final reports/results, never checkpoints or sweeps.
+benchmarks/results/*
+!benchmarks/results/UMD3282_FROZEN_EXAM_REPORT.md
+!benchmarks/results/UMD3282_CONTINUED_EXAM_REPORT.md
+!benchmarks/results/UMD3282_CONTINUED_OPTIMIZATION_REPORT.md
+!benchmarks/results/UMD329_COMPLETION_TEST_REPORT.md
+!benchmarks/results/UMD329_PERFORMANCE_REPORT.md
+!benchmarks/results/UMD330_SLINGSHOT_OPTIMIZATION_REPORT.md
+!benchmarks/results/umd3282_exam_locomo.json
+!benchmarks/results/umd3282_exam_longmemeval.json
+!benchmarks/results/umd3282_exam_membench.json
+!benchmarks/results/umd3282_exam_memora.json
+!benchmarks/results/umd3282_exam_memoryarena.json
+!benchmarks/results/umd3282_exam_memorybench.json
+!benchmarks/results/umd3282_exam_memorybench_temporal.json
+!benchmarks/results/umd329_exam_evermembench_full.json
+!benchmarks/results/umd329_exam_longmemeval_v2_full.json
+!benchmarks/results/umd329_exam_memoryagentbench_full.json
+!benchmarks/results/umd330_exam_memoryagentbench_full.json
+
+# Frontend/build output
+node_modules/
+dist/
+build/
+coverage/
+

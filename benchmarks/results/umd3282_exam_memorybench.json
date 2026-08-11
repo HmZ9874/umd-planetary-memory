@@ -1,0 +1,230 @@
+{
+  "memorybench": {
+    "benchmark": "MemoryBench",
+    "status": "official_dialsim_answer_bearing_session_retrieval_proxy",
+    "datasets": [
+      "DialSim-bigbang",
+      "DialSim-friends",
+      "DialSim-theoffice"
+    ],
+    "questions": 51,
+    "answer_bearing_questions": 34,
+    "by_dataset": {
+      "DialSim-bigbang": {
+        "questions": 17,
+        "answer_bearing_questions": 14,
+        "no_answer_bearing_session": 3,
+        "sessions": 805,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 14,
+          "gold_evidence_items": 854,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.6037414965986395,
+          "any_evidence_recall": {
+            "1": 0.5,
+            "5": 0.6428571428571429,
+            "10": 0.9285714285714286
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.07142857142857142,
+            "10": 0.14285714285714285
+          },
+          "micro_evidence_recall": {
+            "1": 0.20140515222482436,
+            "5": 0.2576112412177986,
+            "10": 0.319672131147541
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 14,
+          "gold_evidence_items": 854,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.3876951637044805,
+          "any_evidence_recall": {
+            "1": 0.2857142857142857,
+            "5": 0.5,
+            "10": 0.5
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.00468384074941452,
+            "5": 0.01405152224824356,
+            "10": 0.02459016393442623
+          }
+        },
+        "corpus_sha256": "cccf6488c8c518d1f48707176103c956b9b88a60cc8f13de516f92835e6db881",
+        "test_sha256": "29a6b48e0fa813158b6803b4a88ca657086ff0db170db95b9fbb5014a1b24f2e"
+      },
+      "DialSim-friends": {
+        "questions": 17,
+        "answer_bearing_questions": 12,
+        "no_answer_bearing_session": 5,
+        "sessions": 788,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 12,
+          "gold_evidence_items": 2249,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.5259259259259259,
+          "any_evidence_recall": {
+            "1": 0.4166666666666667,
+            "5": 0.6666666666666666,
+            "10": 0.75
+          },
+          "full_evidence_recall": {
+            "1": 0.08333333333333333,
+            "5": 0.25,
+            "10": 0.3333333333333333
+          },
+          "micro_evidence_recall": {
+            "1": 0.0164517563361494,
+            "5": 0.07870164517563362,
+            "10": 0.15251222765673633
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 12,
+          "gold_evidence_items": 2249,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.35443280847692615,
+          "any_evidence_recall": {
+            "1": 0.3333333333333333,
+            "5": 0.3333333333333333,
+            "10": 0.3333333333333333
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.0017785682525566918,
+            "5": 0.006669630947087594,
+            "10": 0.014228546020453535
+          }
+        },
+        "corpus_sha256": "0499a353900a9cc3ce3bf01726a679443e12faa7c6a0873ba2d68e820b637f5e",
+        "test_sha256": "4d086580969a971d3b4e2d933c761179e5112beaa26199b3ab32cb888a2402ac"
+      },
+      "DialSim-theoffice": {
+        "questions": 17,
+        "answer_bearing_questions": 8,
+        "no_answer_bearing_session": 9,
+        "sessions": 2347,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 8,
+          "gold_evidence_items": 50,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.49166666666666664,
+          "any_evidence_recall": {
+            "1": 0.25,
+            "5": 0.875,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.125,
+            "5": 0.375,
+            "10": 0.375
+          },
+          "micro_evidence_recall": {
+            "1": 0.04,
+            "5": 0.26,
+            "10": 0.5
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 8,
+          "gold_evidence_items": 50,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.0427077147408436,
+          "any_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.0,
+            "5": 0.0,
+            "10": 0.0
+          }
+        },
+        "corpus_sha256": "96857f239d48c01155778a77edfb5f1ba8e33cce27e1ed1f12ac0b7653cf4f81",
+        "test_sha256": "eaafa9ac0fb4d26fbbb55d2dcd92dc2884cf3e3b5480aa3c003e51f5265dd023"
+      }
+    },
+    "final_capsule_retrieval": {
+      "evaluated_queries": 34,
+      "gold_evidence_items": 3153,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.549906629318394,
+      "any_evidence_recall": {
+        "1": 0.4117647058823529,
+        "5": 0.7058823529411765,
+        "10": 0.8823529411764706
+      },
+      "full_evidence_recall": {
+        "1": 0.058823529411764705,
+        "5": 0.20588235294117646,
+        "10": 0.2647058823529412
+      },
+      "micro_evidence_recall": {
+        "1": 0.06692039327624484,
+        "5": 0.130034887408817,
+        "10": 0.20329844592451635
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 34,
+      "gold_evidence_items": 3153,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.29478199151507617,
+      "any_evidence_recall": {
+        "1": 0.23529411764705882,
+        "5": 0.3235294117647059,
+        "10": 0.3235294117647059
+      },
+      "full_evidence_recall": {
+        "1": 0.0,
+        "5": 0.0,
+        "10": 0.0
+      },
+      "micro_evidence_recall": {
+        "1": 0.002537266095781795,
+        "5": 0.008563273073263558,
+        "10": 0.016809387884554394
+      }
+    },
+    "official_continual_learning_or_response_quality_run": false,
+    "gold_used_for_ranking": false,
+    "runtime_seconds": 62.97629189999998
+  },
+  "metadata": {
+    "adapter": "UMD 3.28.2 continued frozen exam",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 1164,
+      "cache_hits": 0,
+      "cache_misses": 1164,
+      "neural_calls": 1164,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

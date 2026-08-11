@@ -1,0 +1,85 @@
+{
+  "evermembench": {
+    "benchmark": "EverMemBench-Dynamic",
+    "status": "official_english_data_answer_bearing_day_group_retrieval_proxy",
+    "datasets": [
+      "004",
+      "005",
+      "010",
+      "011",
+      "016"
+    ],
+    "questions_per_dataset": null,
+    "questions_total": 3121,
+    "questions": 3121,
+    "answer_bearing_questions": 202,
+    "no_answer_bearing_day_group": 2919,
+    "day_groups": 3570,
+    "final_capsule_retrieval": {
+      "evaluated_queries": 202,
+      "gold_evidence_items": 21160,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8993399339933993,
+      "any_evidence_recall": {
+        "1": 0.8465346534653465,
+        "5": 0.9752475247524752,
+        "10": 0.9801980198019802
+      },
+      "full_evidence_recall": {
+        "1": 0.35148514851485146,
+        "5": 0.44554455445544555,
+        "10": 0.4603960396039604
+      },
+      "micro_evidence_recall": {
+        "1": 0.22651228733459358,
+        "5": 0.25841209829867673,
+        "10": 0.27599243856332706
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 202,
+      "gold_evidence_items": 21160,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.6253761828733042,
+      "any_evidence_recall": {
+        "1": 0.4405940594059406,
+        "5": 0.8366336633663366,
+        "10": 0.900990099009901
+      },
+      "full_evidence_recall": {
+        "1": 0.09405940594059406,
+        "5": 0.19801980198019803,
+        "10": 0.23267326732673269
+      },
+      "micro_evidence_recall": {
+        "1": 0.004206049149338374,
+        "5": 0.015784499054820416,
+        "10": 0.027362948960302457
+      }
+    },
+    "official_end_to_end_answer_or_judge_run": false,
+    "gold_used_for_ranking": false,
+    "runtime_seconds": 2172.608068200001
+  },
+  "metadata": {
+    "adapter": "UMD 3.29 performance / UMD 3.28.2 frozen retrieval semantics",
+    "full_run": true,
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 6691,
+      "cache_hits": 0,
+      "cache_misses": 6691,
+      "neural_calls": 6691,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

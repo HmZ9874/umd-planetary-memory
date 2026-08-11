@@ -1,0 +1,48 @@
+{
+  "protocol": "UMD 3.28.2 frozen gold-blind exam",
+  "frozen_at": "2026-08-11",
+  "rules": {
+    "parameter_changes_after_freeze": false,
+    "gold_read_before_retrieval": false,
+    "gold_used_for_ranking": false,
+    "test_set_tuning": false,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "report_final_and_strict_atomic_channels_separately": true
+  },
+  "retriever": {
+    "neural_candidate_pool": 64,
+    "physics_v316": true,
+    "physics_v317": true,
+    "physics_v325": true,
+    "physics_v326": true,
+    "physics_v327": true,
+    "first_orbit_v316": false
+  },
+  "locally_runnable": {
+    "LongMemEval": {
+      "scope": "full cleaned S set (500 questions)",
+      "data_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+    },
+    "LoCoMo": {
+      "scope": "full public 10-conversation file",
+      "data_sha256": "79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4"
+    },
+    "MemBench": {
+      "scope": "stratified retrieval proxy: first 10 trajectories in each of 55 local official groups",
+      "local_official_trajectory_count": 26637
+    },
+    "Memora": {
+      "scope": "full local 600-query frozen suite"
+    }
+  },
+  "not_locally_runnable_without_new_data_or_infrastructure": [
+    "MemoryAgentBench",
+    "MemoryArena",
+    "LongMemEval-V2",
+    "MemoryBench",
+    "EverMemBench",
+    "EvolMem"
+  ],
+  "metric_note": "Local runs measure evidence retrieval only. They are not official end-to-end QA, agent, or LLM-judge scores."
+}

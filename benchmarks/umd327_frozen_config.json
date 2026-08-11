@@ -1,0 +1,21 @@
+{
+  "version": "UMD 3.27",
+  "frozen_on": "2026-08-10",
+  "adapter": "structured census ledger + dual atomic/singularity orbit",
+  "ranking_uses_gold": false,
+  "ledger": {
+    "exclude_operations": ["delete", "remove", "forget", "cancel"],
+    "exclude_categories": ["no_memory"],
+    "fallback_sources": 48
+  },
+  "fact_states": ["current", "superseded", "tombstone"],
+  "time_phases": ["calendar_month", "calendar_week", "relative_30_day_window"],
+  "reported_metrics": [
+    "traditional_atomic_capsule_retrieval",
+    "singularity_capsule_retrieval",
+    "exact_fact_value_contamination",
+    "compact_payload_ratio",
+    "deterministic_numeric_accuracy"
+  ],
+  "evaluation_disclosure": "Memora data was inspected during earlier development; this full run is a frozen regression, not a statistically independent blind test."
+}
