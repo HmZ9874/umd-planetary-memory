@@ -29,6 +29,10 @@ FILES: dict[str, tuple[str, int]] = {
     "umd3321_exam_memoryagentbench_capacity.json": ("memoryagentbench", 1600),
     "umd3321_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
     "umd3331_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
+    "umd334_longmemeval_holdout400.json": ("longmemeval", 400),
+    "umd334_longmemeval_full_replay.json": ("longmemeval", 500),
+    "umd335_longmemeval_full_regression.json": ("longmemeval", 500),
+    "umd336_longmemeval_full_regression.json": ("longmemeval", 500),
 }
 
 
@@ -60,7 +64,7 @@ def _assert_probability_tree(value: Any, path: str = "root") -> None:
 def _assert_formula_registry() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     english_start = readme.index("### 5.0 English formula registry")
-    expected = list(range(1, 47))
+    expected = list(range(1, 62))
     for name, section in (
         ("Chinese", readme[:english_start]),
         ("English", readme[english_start:]),
@@ -90,7 +94,7 @@ def main() -> None:
         _assert_probability_tree(result, filename)
         validated += 1
     print(
-        f"validated_results={validated} formula_relations=46 "
+        f"validated_results={validated} formula_relations=61 "
         "gold_used_for_ranking=false status=pass"
     )
 

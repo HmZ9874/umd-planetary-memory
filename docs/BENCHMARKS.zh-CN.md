@@ -15,7 +15,10 @@ Final 指胶囊检索；Strict 指每个排名位置只包含一个来源的原�
 | 基准 | 范围/可评估问题 | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
-| LongMemEval_S | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.28.2 冻结 | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.34 参数冻结保留集 | 376 | 0.9415 | 1.0000 | 0.9920 | 0.9096 | 0.9840 | 0.9069 |
+| LongMemEval_S 3.35 评估后回归 | 470 | 0.9745 | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
+| LongMemEval_S 3.36 评估后回归 | 470 | **0.9979** | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
 | MemBench（分层代理） | 550 | 0.8200 | 0.9982 | 0.9418 | 0.5782 | 0.9509 | 0.6000 |
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
@@ -65,6 +68,18 @@ Strict Full R@10 相对提升 `59.5%`。Accurate Retrieval 不变；Conflict Res
 ## 3.3 UMD 3.32.1 → 3.33.1 双文档恒星
 
 四项核心指标分别从 `0.8281 / 0.7526 / 0.7378 / 0.5095` 提升到 `0.8681 / 0.7813 / 0.7639 / 0.5200`。子集预算下 Final Full R@10 实现上限约 `0.9531`，当前达到 `81.97%`；Strict Full 达到固定上限的 `75.44%`。详见 `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`。
+
+### 3.4 UMD 3.34 LongMemEval 查询裂变
+
+第 0–99 题是明确的后数据集开发回放（94 题可回答）；参数随后冻结，第 100–499 题作为 376 题可回答保留集。保留集 Strict Any R@1 为 `0.8936 → 0.9096`，Strict MRR 为 `0.9138 → 0.9371`，Strict Full R@10 为 `0.8218 → 0.9069`；Final Any R@1 和 Full R@10 保持 `0.9415 / 0.9920`。500 题混合回放不是盲测，单独披露。详见 `benchmarks/results/UMD334_QUERY_FISSION_REPORT.md`。
+
+### 3.5 UMD 3.35 后台幽灵物质
+
+500 题结果是评估后回归，不是盲测。相对 3.34，Final Any R@1 `0.9468 → 0.9745`、Final Full R@1 `0.7383 → 0.8426`、Strict Any R@1 `0.9213 → 0.9298`，而 Final/Strict Full R@10 守恒为 `0.9936 / 0.9085`。逐题比较得到 Final R@1 改善 13、回退 0，Strict R@1 改善 4、回退 0。详见 `benchmarks/results/UMD335_GHOST_MATTER_REPORT.md`。
+
+### 3.6 UMD 3.36 有界幽灵星座
+
+相对 3.35，Final Any R@1 为 `0.9745 → 0.9979`，Final Full R@1 为 `0.8426 → 0.9851`。470 题逐题审计得到 Final Full@1 改善 67、回退 0；Final Full@10 和所有 Strict 指标逐题零变化，Final@10 平均字符数完全相同。该结果仍属于评估后回归。详见 `benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md`。
 
 ## 4. 范围与偏差
 

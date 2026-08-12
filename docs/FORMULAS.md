@@ -219,6 +219,89 @@ Structured paths stop after complete terminal coverage, reject entity cycles, an
 
 `E_absorb(p)=E₃.₃₂(p)−1.25Σ_r max(0,count_p(r)−1)`
 
+## 10.4 UMD 3.34 query fission and episodic nuclei / 查询裂变与用户陈述核
+
+The full query is the conserved central star. Only predicate-bearing clauses
+with at least two content terms become subfields: / 完整问题是守恒中央恒星；只有包含谓词和至少两个内容词的子句才形成子场：
+
+`Q* = {q} ∪ {c_j | verb(c_j) ∧ content(c_j)≥2}, |Q*|≤5`
+
+A deterministic first-person declarative rewrite contributes bounded semantic
+mass: / 确定性第一人称声明式改写只贡献有界语义质量：
+
+`S'_i = 0.70 cos(v_q,v_i) + 0.30 max_{u∈Rewrite(Q*)} cos(v_u,v_i)`
+
+For role-marked dialogue, the episodic nucleus contains user turns only; plain
+documents fall back to the complete source: / 对角色对话，用户陈述核只含用户轮次；普通文档回退到完整来源：
+
+`N(x)=concat{turn | role(turn)=user}`; otherwise `N(x)=x`.
+
+The open-text periapsis field is: / 开放文本近日点场为：
+
+`P_i = 0.50S_N(i) + 0.30L_N(i) + 0.12S_X(i) + 0.08L_X(i)`
+
+Strict rank one changes only through a ratio, margin, and lexical-contact gate:
+/ Strict 首位只能通过分数比、边际与用户词汇接触三重约束改变：
+
+`Promote_i=I[P₁/P₂≥1.08 ∧ P₁−P₂≥0.055 ∧ L_N(1)≥0.55L_N(old)]`
+
+Candidate discovery round-robins the central, clause, and nucleus BM25 fields
+under a 96-source ceiling. Compound-query moons append to the conserved first
+Final capsule: / 候选在中央、子句和用户核 BM25 场之间轮转，最多 96 个来源；复合查询卫星只追加到守恒首胶囊：
+
+`Final₁³·³⁴ = Final₁³·³³ ∪ {top(c_j)}`
+
+## 10.5 UMD 3.35 background ghost matter / 后台幽灵物质
+
+Ghosts are derived navigation traces, not memory facts. Fact-bearing user
+clauses receive bounded mass while requests are suppressed: / 幽灵是派生导航痕迹而非记忆事实；用户事实子句获得有界质量，请求被抑制：
+
+`m_g=min(1, Σ_c max(0,3I_fact+2I_state+2I_event+I_number−3I_request)/20)`
+
+Absolute dates are projected relative to the maximum date in the visible
+prefix `t*`, never a future session: / 绝对日期只相对当前可见前缀最大日期 `t*` 投影，不读取未来会话：
+
+`A(d|t*)={ISO(d),weekday(d),t*−d,round((t*−d)/7),monthgap(t*,d)}`
+
+The bounded attraction field is: / 有界牵引场为：
+
+`G_i=(1−ω)P_i+ω(0.82L_g(i)+0.18m_g(i))`, `ω∈{0.30 preference, 0.36 temporal}`
+
+Activation requires role-marked dialogue, positive fact mass, and a preference
+or temporal query. All navigation re-anchors to immutable provenance: / 激活要求角色化对话、正事实质量和偏好/时间查询；导航必须回锚到不可变来源：
+
+`Active_g=I[role_marked ∧ fact_mass>0 ∧ (preference(q)∨temporal(q))]`
+
+`Evidence(g_i)=source_id(g_i)`
+
+Final may append the top two original sources without deleting prior contents.
+Strict is conserved except for an explicit temporal-computation gate: / Final 可追加前两个原始来源而不删除旧内容；Strict 除明确时间计算门外保持守恒：
+
+`Final₁³·³⁵=Final₁³·³⁴∪{source(top₂(G))}`
+
+`Strict³·³⁵=Strict³·³⁴`, unless `L_g≥0.35 ∧ G₁/G₂≥1.055 ∧ G₁−G₂≥0.035`.
+
+## 10.6 UMD 3.36 bounded ghost constellations / 有界幽灵星座
+
+Repeated fact contact activates version resonance without explicit update
+wording: / 重复事实接触可在没有显式更新词时激活版本共振：
+
+`Res(q)=I[Σ_i I[m_i>0 ∧ L_g(i,q)≥0.05]≥2]`
+
+The query determines a bounded evidence capacity without gold: / 查询在不读取 gold 的条件下决定有界证据容量：
+
+`B(q)∈{12 list, 10 temporal, 6 composite/resonance, 5 evolution, 2 preference}`, `A(q)≤6`.
+
+Migration is restricted to the old Final@10 horizon: / 迁移严格限制在旧 Final@10 视界内：
+
+`H₁₀=⋃_{r≤10}Final_r³·³⁵`
+
+`M=(top_B(G)∪top_A(Strict))∩H₁₀`
+
+`Final₁³·³⁶=Final₁³·³⁵∪M`
+
+Therefore `⋃_{r≤10}Final_r³·³⁶=H₁₀` and `Strict³·³⁶=Strict³·³⁵`.
+
 ## 11. Retrieval metrics / 检索指标
 
 For gold evidence set `Y` and the union of sources in the first `k` retrieval units `R_k`:
@@ -233,7 +316,9 @@ Final capsule and strict atomic metrics must always be reported separately.
 ## 12. Complexity and memory / 复杂度与内存
 
 - BM25 scoring is sparse in query postings plus an `O(n)` output vector.
-- Neural scoring is bounded by the lexical candidate pool (64 in the published frozen exam).
+- Neural scoring is bounded by 64 candidates in the 3.28.2 frozen exam and at most 96 query-fission candidates in UMD 3.34/3.35.
+- UMD 3.34 stores one additional vector per discovered user nucleus in the current index; the cache is released with that index and does not restore historical metadata to resident RAM.
+- UMD 3.35 adds no neural vector family. Ghost traces contain distilled text, date, source ID and scalar mass; they are rebuildable with the active index and can be discarded without losing facts.
 - Marginal coverage is bounded to 192 candidates; UMD 3.29 replaces large repeated set algebra with incremental postings.
 - Slingshot/closure construction is linear in parsed facts and uses a sparse subject adjacency map; traversal is capped at three hops in UMD 3.30, four in 3.31, and five in 3.32.1.
 - On the largest measured structured context (1,119 chunks, 17,831 facts), the slingshot graph used 5.92 MiB steady Python memory, 15.03 MiB construction peak and 0.652 seconds to build.

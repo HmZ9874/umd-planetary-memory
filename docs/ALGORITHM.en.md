@@ -135,6 +135,26 @@ UMD 3.33.1 losslessly reconstructs `Document N:` boundaries from a regular fixed
 
 The structured graph absorbs a path after complete query-supported terminal coverage, rejects entity cycles, and subtracts `1.25` energy for every repeated relation. This repairs direct hits that previously wandered through loops such as `citizen → head_government → citizen`. Ordinary dialogue, irregular windows, and contexts with fewer than 20 document boundaries disable document stars.
 
+## 9.8 UMD 3.34 query fission and episodic nuclei
+
+The full question remains a central star. Predicate-bearing clauses become at most four subfields, while short noun conjunctions remain intact. First-person memory questions may add one deterministic declarative rewrite. Central, clause, and user-nucleus lexical orders are round-robined into a bounded 96-source discovery horizon.
+
+Role-marked dialogue is split into an episodic user nucleus and complete audit text. The user nucleus carries most strict rank-one mass, preventing long assistant recommendations from attracting a question merely because they repeat its topic. Complete source text remains retrievable and auditable. A ratio of `1.08`, margin of `0.055`, and user-lexical contact gate protect strict rank one. Plain documents cannot activate this direct rank-one repair.
+
+For compound questions, one candidate moon per subfield joins the conserved first Final capsule and the coverage orbit. No old first-capsule source is removed.
+
+## 9.9 UMD 3.35 background ghost matter
+
+A ghost is a disposable navigation trace built with the active index. It distills only user fact clauses in role-marked dialogue; requests, assistant expansions, and text without positive fact mass produce no searchable content. Absolute dates receive aliases relative to the maximum date in the visible prefix, preventing future-session leakage.
+
+Ghost matter wakes only for preference or temporal queries; plain documents and direct fact questions keep the established path. Distilled text can never become evidence, because every hit re-anchors to an original `source_id`. Final rank one may conservatively append two original sources. Strict uses the exact 3.34 capsule matrix except when an explicit temporal computation/order query passes lexical contact `0.35`, score ratio `1.055`, and margin `0.035`; assistant-output recollection and simple relative-date filters are excluded.
+
+## 9.10 UMD 3.36 bounded ghost constellations
+
+UMD 3.36 estimates evidence multiplicity from query mode and activates version resonance when at least two facts have lexical contact of `0.05` or more. The ghost semantic orbit and Strict atomic orbit form a dual-orbit consensus, contributing at most 12 and six candidates respectively.
+
+Every migrated source must already occur in the pre-migration Final@10 union. Rank one only takes a set union, while Strict is computed from the pre-migration snapshot. Final@10 sources/characters and every Strict rank therefore remain unchanged: this optimizes evidence packaging without widening retrieval.
+
 ## 10. Persistence, security and tenancy
 
 UMD 3.6+ includes SQLite durability, bounded active RAM, per-tenant AES-256-GCM ciphertext, an HMAC-chained transaction log, atomic rollback/recovery, tenant isolation, ACL/ABAC, capability tokens, key rotation, wrong-key rejection and embedding-encoder identity checks.
@@ -158,6 +178,9 @@ The master key must live outside the database in a KMS, HSM or secret manager.
 | 3.31 | output-slot relations, four-hop evidence closure, dependency provenance and strict atomic closure order |
 | 3.32.1 | relation superposition, five-hop coverage collapse, answer-path consensus, version shadows and strict atomic column unfolding |
 | 3.33.1 | overlap reconstruction, binary document stars, confidence gate, terminal absorption and cycle energy |
+| 3.34 | query fission, declarative rewrites, episodic user nuclei, semantic periapsis and guarded subfield coverage |
+| 3.35 | background ghost distillation, prefix-relative time, provenance re-anchoring and Strict conservation |
+| 3.36 | evidence multiplicity, version resonance, dual-orbit consensus and zero-expansion migration |
 
 The repository retains the implementation, tests and design records for the complete lineage.
 

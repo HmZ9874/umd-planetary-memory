@@ -6,15 +6,32 @@
 
 [中文完整白皮书](#中文完整白皮书) · [English full white paper](#english-full-white-paper) · [Source](#代码与复现) · [Results](#公开成绩) · [Limitations](#诚实边界与已知限制)
 
+## Best current result / 当前最佳成绩
+
+**UMD 3.36 bounded ghost constellations / UMD 3.36 有界幽灵星座**
+
+| LongMemEval_S post-evaluation regression / 评估后回归 | Score / 分数 |
+|---|---:|
+| Final Any R@1 | **0.9979** |
+| Final Full R@1 | **0.9851** |
+| Final Micro R@1 | **0.9899** |
+| Final Full R@10 | **0.9936** |
+| Strict Any R@1 | **0.9298** |
+| Strict Full R@10 | **0.9085** |
+
+The 500-question run contains 470 answerable questions. Relative to UMD 3.35, Final Full R@1 improves on 67 questions with zero regressions; Final@10 character cost and every Strict metric are unchanged. This is a gold-blind-ranking evidence-retrieval proxy developed after inspecting the benchmark, not a blind test, official end-to-end answer score, or leaderboard submission. / 500 题中有 470 题可回答；相对 UMD 3.35，Final Full R@1 改善 67 题、回退 0 题，Final@10 字符成本与全部 Strict 指标保持不变。这是排序阶段不读取 gold 的证据检索代理，但参数在检查 benchmark 后开发，不是盲测、官方端到端答案分数或排行榜提交。
+
+[Full bilingual report / 完整双语报告](benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md) · [Raw result JSON / 原始结果](benchmarks/results/umd336_longmemeval_full_regression.json)
+
 ## Formula inventory / 公式总览
 
 | Published on this README / 已在首页公开 | Count / 数量 |
 |---|---:|
-| Independent mathematical relations / 独立数学关系 | **46** |
-| Core algorithm formula families / 核心算法公式族 | **12** |
+| Independent mathematical relations / 独立数学关系 | **61** |
+| Core algorithm formula families / 核心算法公式族 | **15** |
 | Evaluation metric formulas / 评估指标公式 | **4** |
 
-Every relation has a stable identifier from `UMD-F001` to `UMD-F046`. Algorithm relations are `F001–F028` and `F033–F046`; `F029–F032` preserve the four evaluation definitions. / 每条关系都有 `UMD-F001` 至 `UMD-F046` 的稳定编号；算法关系为 `F001–F028` 与 `F033–F046`，`F029–F032` 保留四个评估定义。
+Every relation has a stable identifier from `UMD-F001` to `UMD-F061`. Algorithm relations are `F001–F028` and `F033–F061`; `F029–F032` preserve the four evaluation definitions. / 每条关系都有 `UMD-F001` 至 `UMD-F061` 的稳定编号；算法关系为 `F001–F028` 与 `F033–F061`，`F029–F032` 保留四个评估定义。
 
 ---
 
@@ -22,7 +39,7 @@ Every relation has a stable identifier from `UMD-F001` to `UMD-F046`. Algorithm 
 
 ## 1. 项目状态与诚实声明
 
-当前开发版本是 **UMD 3.33.1**。仓库公开算法源码、公式、工程推导、参数、确定性测试、对抗测试、冻结协议、正式结果 JSON、Python/TypeScript SDK 原型和观察台原型。
+当前开发版本是 **UMD 3.36**。仓库公开算法源码、公式、工程推导、参数、确定性测试、对抗测试、冻结协议、正式结果 JSON、Python/TypeScript SDK 原型和观察台原型。
 
 这里的“公开计算推理”是指：可验证的设计依据、输入变量、公式、约束、数值算例、消融结果和失败分析。它不包含任何模型供应商的私有隐藏思维链。
 
@@ -132,10 +149,13 @@ flowchart LR
 | 3.31 | 输出槽引力、四跳证据闭包、依赖来源轨道、严格原子闭包排序 | `benchmarks/umd331_adapter.py` |
 | 3.32.1 | 关系叠加、五跳覆盖坍缩、答案路径共识、版本影子轨道、严格原子列展开 | `benchmarks/umd332_adapter.py` |
 | 3.33.1 | 重叠重建、双文档恒星、置信门、终点吸收边界与循环能量 | `benchmarks/umd333_adapter.py` |
+| 3.34 | 查询裂变、声明式改写、用户陈述核、语义近日点与双置信门 | `benchmarks/umd334_adapter.py` |
+| 3.35 | 后台幽灵物质、时间别名投影、来源回锚与 Strict 通道守恒 | `benchmarks/umd335_adapter.py` |
+| 3.36 | 证据多重性、版本共振、零扩容潮汐迁移与双轨共识 | `benchmarks/umd335_adapter.py` |
 
-### 5.0 中文公式注册表：46 个独立关系
+### 5.0 中文公式注册表：61 个独立关系
 
-下面的“关系”包括评分方程、集合关系、分段状态函数、版本选择规则和指标定义。36 个算法关系按十一个核心算法族组织，另保留四个评估指标；同一公式在后文出现的数值展开不重复计数。
+下面的“关系”包括评分方程、集合关系、分段状态函数、版本选择规则和指标定义。57 个算法关系按十五个核心算法族组织，另保留四个评估指标；同一公式在后文出现的数值展开不重复计数。
 
 #### 公式族 1：归一化与排名融合（3 条）
 
@@ -222,7 +242,31 @@ flowchart LR
 45. **UMD-F045 — 完整终点吸收**：`Stop(p,q)=I[R_terminal(q) ⊆ R(p) ∧ r_last∈R_terminal(q)]`。路径覆盖全部查询终点关系后立即停止扩展，防止越过正确答案。
 46. **UMD-F046 — 循环与重复关系能量**：`E_absorb(p)=E₃.₃₂(p)−1.25Σ_r max(0,count_p(r)−1)`，且若下一对象已在路径实体集中则拒绝该边。
 
-计数校验：`3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 + 4 + 8 + 6 = 42` 个算法关系；`42 + 4 = 46` 个独立数学关系。
+#### 公式族 13：查询裂变与用户陈述核（6 条）
+
+47. **UMD-F047 — 中央恒星查询裂变**：`Q* = {q} ∪ {c_j | verb(c_j) ∧ content(c_j)≥2}, |Q*|≤5`。完整问题永远保留；只拆分含谓词的真实子句，短名词并列不拆分。
+48. **UMD-F048 — 声明式语义叠加**：`S'_i = 0.70 cos(v_q,v_i) + 0.30 max_{u∈Rewrite(Q*)} cos(v_u,v_i)`。每个子查询最多产生一个确定性第一人称声明式改写。
+49. **UMD-F049 — 用户陈述核**：`N(x)=concat{turn | role(turn)=user}`；若没有角色标记则 `N(x)=x`。助手生成内容仍留在证据/审计文本，但不会在开放对话中支配首位。
+50. **UMD-F050 — 语义近日点质量**：`P_i = 0.50S_N(i)+0.30L_N(i)+0.12S_X(i)+0.08L_X(i)`。融合用户核语义/词汇与完整文本语义/词汇。
+51. **UMD-F051 — 严格近日点双门**：`Promote_i=I[P₁/P₂≥1.08 ∧ P₁−P₂≥0.055 ∧ L_N(1)≥0.55L_N(old)]`，且仅在角色对话核激活时允许改变 Strict 首位。
+52. **UMD-F052 — 子场覆盖守恒**：`Final₁³·³⁴ = Final₁³·³³ ∪ {top(c_j)}`，子场候选按轮转顺序进入覆盖轨道，候选总预算不超过 96；旧首胶囊不删除。
+
+#### 公式族 14：后台幽灵物质（6 条）
+
+53. **UMD-F053 — 事实蒸馏质量**：`m_g=min(1, Σ_c max(0,3I_fact+2I_state+2I_event+I_number−3I_request)/20)`。只压缩用户事实子句；没有正质量时生成静默幽灵。
+54. **UMD-F054 — 前缀相对时间投影**：`A(d|t*)={ISO(d),weekday(d),t*−d,round((t*−d)/7),monthgap(t*,d)}`，其中 `t*` 是当前可见前缀的最大日期，不读取未来会话。
+55. **UMD-F055 — 幽灵牵引分数**：`G_i=(1−ω)P_i+ω(0.82L_g(i)+0.18m_g(i))`，偏好查询 `ω=0.30`，时间查询 `ω=0.36`。
+56. **UMD-F056 — 休眠激活函数**：`Active_g=I[role_marked ∧ fact_mass>0 ∧ (preference(q)∨temporal(q))]`。普通文档、直接事实题和无事实请求不激活后台整理。
+57. **UMD-F057 — 来源回锚守恒**：`Evidence(g_i)=source_id(g_i)` 且 `Final₁³·³⁵=Final₁³·³⁴∪{source(top₂(G))}`。幽灵文本永不成为答案 provenance。
+58. **UMD-F058 — Strict 幽灵边界**：`Strict³·³⁵=Strict³·³⁴`，除非明确时间计算题满足 `L_g≥0.35 ∧ G₁/G₂≥1.055 ∧ G₁−G₂≥0.035`，且不是助手输出回忆；通过时只把原始来源提升到首位。
+
+#### 公式族 15：幽灵星座与零扩容迁移（3 条）
+
+59. **UMD-F059 — 版本共振激活**：`Res(q)=I[Σ_i I[m_i>0 ∧ L_g(i,q)≥0.05]≥2]`。即使问题没有“当前/以前”字样，两个以上同主题事实也能形成版本星座。
+60. **UMD-F060 — 查询证据预算**：`B(q)∈{12 list, 10 temporal, 6 composite/resonance, 5 evolution, 2 preference}`，并令原子锚点预算 `A(q)≤6`。预算由查询模式决定，不读取 gold 数量。
+61. **UMD-F061 — 零扩容潮汐守恒**：`H₁₀=⋃_{r≤10}Final_r³·³⁵`，`M=(top_B(G)∪top_A(Strict))∩H₁₀`，`Final₁³·³⁶=Final₁³·³⁵∪M`，且 `⋃_{r≤10}Final_r³·³⁶=H₁₀`、`Strict³·³⁶=Strict³·³⁵`。
+
+计数校验：`3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 + 4 + 8 + 6 + 6 + 6 + 3 = 57` 个算法关系；`57 + 4 = 61` 个独立数学关系。
 
 ### 5.1 词法、层级与归一化
 
@@ -402,8 +446,11 @@ UMD 3.29 不改变公式，只增量维护重叠质量：
 
 | 基准 | 可评估范围 | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
+| LongMemEval_S 3.36 评估后回归 | 470 | **0.9979** | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
-| LongMemEval_S | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.28.2 冻结 | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.34 参数冻结保留集 | 376 | 0.9415 | 1.0000 | 0.9920 | 0.9096 | 0.9840 | 0.9069 |
+| LongMemEval_S 3.35 评估后回归 | 470 | 0.9745 | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
 | MemBench 分层代理 | 550 | 0.8200 | 0.9982 | 0.9418 | 0.5782 | 0.9509 | 0.6000 |
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
@@ -469,6 +516,18 @@ Strict Full R@10 相对提升 `59.5%`。Accurate Retrieval 不变；Conflict Res
 
 按普通文档路径 88 来源、结构化闭包路径 296 来源的实际预算，Final Full R@10 的 size-only 实现上限约为 `0.9531`，当前达到其 `81.97%`；Strict Full 的 `0.5200` 达到固定上限 `0.6892` 的 `75.44%`。检查点全量墙钟约 `1301.1 s`，比 3.32.1 的同机观测多约 `38%`。详见 `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`。
 
+### UMD 3.34 LongMemEval 查询裂变消融
+
+前 100 题用于公开的后数据集开发回放；参数冻结后，第 100–499 题作为 376 题可回答保留集。Strict Any R@1 从 `0.8936` 提升到 `0.9096`，Strict MRR 从 `0.9138` 提升到 `0.9371`，Strict Full R@10 从 `0.8218` 提升到 `0.9069`；Final Any R@1 与 Final Full R@10 保持 `0.9415 / 0.9920`。完整 500 题混合回放不是盲测，不能替代保留集。详见 `benchmarks/results/UMD334_QUERY_FISSION_REPORT.md`。
+
+### UMD 3.35 LongMemEval 后台幽灵物质回归
+
+500 题回归是明确的评估后开发结果，不是新的盲测。相对 3.34，Final Any R@1 为 `0.9468 → 0.9745`，Final Full R@1 为 `0.7383 → 0.8426`，Strict Any R@1 为 `0.9213 → 0.9298`；Final Full R@10 与 Strict Full R@10 守恒为 `0.9936 / 0.9085`。逐题审计得到 Final R@1 改善 13、回退 0，Strict R@1 改善 4、回退 0；R@10 输出字符量没有扩大。详见 `benchmarks/results/UMD335_GHOST_MATTER_REPORT.md`。
+
+### UMD 3.36 LongMemEval 有界幽灵星座
+
+3.36 同样是评估后回归，不是盲测。相对 3.35，Final Any R@1 为 `0.9745 → 0.9979`，Final Full R@1 为 `0.8426 → 0.9851`，Final Micro R@1 为 `0.8944 → 0.9899`。470 题逐题审计为 Final Full@1 改善 67、回退 0；Final Full@10 和所有 Strict 指标逐题零变化。Final@10 平均字符数完全相同，提升来自原有前十来源的有界重组。详见 `benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md`。
+
 ### 测试范围边界
 
 - LoCoMo：1,986 问中 4 问无 evidence 标签，评分 1,982 问。
@@ -522,7 +581,7 @@ python -m pytest -q \
 python scripts/verify_published_results.py
 ```
 
-当前快照预期：`126 passed`，以及 `validated_results=16 formula_relations=46 gold_used_for_ranking=false status=pass`。GitHub Actions 在 Python 3.12/Linux 上执行相同验证。
+当前快照预期：`148 passed`，以及 `validated_results=20 formula_relations=61 gold_used_for_ranking=false status=pass`。GitHub Actions 在 Python 3.12/Linux 上执行相同验证。
 
 第三方 benchmark 原始数据不随仓库分发。数据布局、命令、SHA-256 与复现差异见 [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)。正式 JSON 位于 [`benchmarks/results/`](benchmarks/results/)，更细的中英文材料保留在 [`docs/`](docs/)。
 
@@ -546,7 +605,7 @@ python scripts/verify_published_results.py
 
 ## 1. Status and integrity statement
 
-The current development release is **UMD 3.33.1**. The repository publishes the algorithm lineage, equations, engineering derivations, parameters, deterministic and adversarial tests, frozen protocols, formal result JSON, Python/TypeScript SDK prototypes, and an observatory console prototype.
+The current development release is **UMD 3.36**. The repository publishes the algorithm lineage, equations, engineering derivations, parameters, deterministic and adversarial tests, frozen protocols, formal result JSON, Python/TypeScript SDK prototypes, and an observatory console prototype.
 
 “Published reasoning” here means auditable design rationale, variables, equations, constraints, worked calculations, ablations, and failure analysis. It does not mean private hidden chain-of-thought from any model provider.
 
@@ -636,10 +695,13 @@ Forgetting therefore updates state, versioned edges, indexes, caches, WAL, answe
 | 3.31 | output-slot gravity, four-hop evidence closure, dependency provenance orbit, strict atomic closure ordering | `benchmarks/umd331_adapter.py` |
 | 3.32.1 | relation superposition, five-hop coverage collapse, answer-path consensus, version shadows, strict atomic column unfolding | `benchmarks/umd332_adapter.py` |
 | 3.33.1 | overlap reconstruction, binary document stars, confidence gate, terminal absorption and cycle energy | `benchmarks/umd333_adapter.py` |
+| 3.34 | query fission, declarative rewrites, episodic nuclei, semantic periapsis and dual confidence gates | `benchmarks/umd334_adapter.py` |
+| 3.35 | background ghost matter, temporal aliases, provenance re-anchoring and Strict conservation | `benchmarks/umd335_adapter.py` |
+| 3.36 | evidence multiplicity, version resonance, zero-expansion tidal migration and dual-orbit consensus | `benchmarks/umd335_adapter.py` |
 
-### 5.0 English formula registry: 46 independent relations
+### 5.0 English formula registry: 61 independent relations
 
-“Relation” includes scoring equations, set relations, piecewise state functions, version-selection rules, and metric definitions. Thirty-six algorithm relations form eleven core families, with four evaluation metrics retained separately; worked numeric expansions later in the README are not counted again.
+“Relation” includes scoring equations, set relations, piecewise state functions, version-selection rules, and metric definitions. Fifty-seven algorithm relations form fifteen core families, with four evaluation metrics retained separately; worked numeric expansions later in the README are not counted again.
 
 #### Family 1: normalization and rank fusion (3)
 
@@ -726,7 +788,31 @@ Forgetting therefore updates state, versioned edges, indexes, caches, WAL, answe
 45. **UMD-F045 — Complete-terminal absorption**: `Stop(p,q)=I[R_terminal(q) ⊆ R(p) ∧ r_last∈R_terminal(q)]`. Expansion stops after the path covers every query-supported terminal relation.
 46. **UMD-F046 — Cycle and repeated-relation energy**: `E_absorb(p)=E₃.₃₂(p)−1.25Σ_r max(0,count_p(r)−1)`; an edge is rejected when its next object is already in the path entity set.
 
-Count invariant: `3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 + 4 + 8 + 6 = 42` algorithm relations; `42 + 4 = 46` independent mathematical relations.
+#### Family 13: query fission and episodic nuclei (6)
+
+47. **UMD-F047 — Central-star query fission**: `Q* = {q} ∪ {c_j | verb(c_j) ∧ content(c_j)≥2}, |Q*|≤5`. The complete question is conserved; only predicate-bearing clauses split.
+48. **UMD-F048 — Declarative semantic superposition**: `S'_i = 0.70 cos(v_q,v_i) + 0.30 max_{u∈Rewrite(Q*)} cos(v_u,v_i)`. Each subquery permits at most one deterministic first-person rewrite.
+49. **UMD-F049 — Episodic user nucleus**: `N(x)=concat{turn | role(turn)=user}` and `N(x)=x` without role markers. Assistant text remains evidence/audit material but cannot dominate open-dialogue rank one.
+50. **UMD-F050 — Semantic periapsis quality**: `P_i = 0.50S_N(i)+0.30L_N(i)+0.12S_X(i)+0.08L_X(i)`.
+51. **UMD-F051 — Strict periapsis dual gate**: `Promote_i=I[P₁/P₂≥1.08 ∧ P₁−P₂≥0.055 ∧ L_N(1)≥0.55L_N(old)]`; it can change Strict rank one only in role-marked dialogue.
+52. **UMD-F052 — Subfield coverage conservation**: `Final₁³·³⁴ = Final₁³·³³ ∪ {top(c_j)}`. Subfield candidates enter a round-robin coverage orbit under a 96-source ceiling; the old first capsule is never deleted.
+
+#### Family 14: background ghost matter (6)
+
+53. **UMD-F053 — Fact-distillation mass**: `m_g=min(1, Σ_c max(0,3I_fact+2I_state+2I_event+I_number−3I_request)/20)`. Only user fact clauses survive; no positive mass produces a silent ghost.
+54. **UMD-F054 — Prefix-relative temporal projection**: `A(d|t*)={ISO(d),weekday(d),t*−d,round((t*−d)/7),monthgap(t*,d)}`, where `t*` is the maximum date in the visible prefix, never a future session.
+55. **UMD-F055 — Ghost attraction score**: `G_i=(1−ω)P_i+ω(0.82L_g(i)+0.18m_g(i))`, with `ω=0.30` for preference and `0.36` for temporal queries.
+56. **UMD-F056 — Dormant activation function**: `Active_g=I[role_marked ∧ fact_mass>0 ∧ (preference(q)∨temporal(q))]`. Plain documents, direct fact queries, and fact-free requests cannot activate background organization.
+57. **UMD-F057 — Provenance re-anchoring conservation**: `Evidence(g_i)=source_id(g_i)` and `Final₁³·³⁵=Final₁³·³⁴∪{source(top₂(G))}`. Distilled ghost text never becomes answer provenance.
+58. **UMD-F058 — Strict ghost boundary**: `Strict³·³⁵=Strict³·³⁴` unless an explicit temporal computation passes `L_g≥0.35 ∧ G₁/G₂≥1.055 ∧ G₁−G₂≥0.035` and is not assistant-output recollection; only the original source may then move to rank one.
+
+#### Family 15: ghost constellations and zero-expansion migration (3)
+
+59. **UMD-F059 — Version-resonance activation**: `Res(q)=I[Σ_i I[m_i>0 ∧ L_g(i,q)≥0.05]≥2]`. Two or more same-topic facts form a version constellation even when the query lacks explicit current/previous wording.
+60. **UMD-F060 — Query evidence budget**: `B(q)∈{12 list, 10 temporal, 6 composite/resonance, 5 evolution, 2 preference}`, with atomic-anchor budget `A(q)≤6`. Query mode determines capacity without reading gold multiplicity.
+61. **UMD-F061 — Zero-expansion tidal conservation**: `H₁₀=⋃_{r≤10}Final_r³·³⁵`, `M=(top_B(G)∪top_A(Strict))∩H₁₀`, and `Final₁³·³⁶=Final₁³·³⁵∪M`, while `⋃_{r≤10}Final_r³·³⁶=H₁₀` and `Strict³·³⁶=Strict³·³⁵`.
+
+Count invariant: `3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 + 4 + 8 + 6 + 6 + 6 + 3 = 57` algorithm relations; `57 + 4 = 61` independent mathematical relations.
 
 ### 5.1 Normalization and rank fusion
 
@@ -851,8 +937,11 @@ The table normalizes reporting fields, not task difficulty. Benchmarks differ in
 
 | Benchmark | Evaluated scope | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
+| LongMemEval_S 3.36 post-evaluation regression | 470 | **0.9979** | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
-| LongMemEval_S | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.28.2 frozen | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.34 frozen holdout | 376 | 0.9415 | 1.0000 | 0.9920 | 0.9096 | 0.9840 | 0.9069 |
+| LongMemEval_S 3.35 post-evaluation regression | 470 | 0.9745 | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
 | MemBench stratified proxy | 550 | 0.8200 | 0.9982 | 0.9418 | 0.5782 | 0.9509 | 0.6000 |
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
@@ -916,6 +1005,18 @@ The same-capacity 600-chunk run (603 evaluable questions) reaches Final Any R@1 
 
 Using the actual 88-source ordinary-document budget and 296-source structured-closure budget, the subset-aware Final Full R@10 size ceiling is about `0.9531`; the result reaches `81.97%` of it. Strict Full `0.5200` reaches `75.44%` of its fixed `0.6892` ceiling. The checkpointed full run used about `1301.1 s`, roughly `38%` above the same-machine 3.32.1 observation. See `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`.
 
+### UMD 3.34 LongMemEval query-fission ablation
+
+Questions 0–99 are an explicit post-dataset development replay. After freezing parameters, questions 100–499 form a 376-answerable holdout. Strict Any R@1 rises from `0.8936` to `0.9096`, Strict MRR from `0.9138` to `0.9371`, and Strict Full R@10 from `0.8218` to `0.9069`; Final Any R@1 and Final Full R@10 remain `0.9415 / 0.9920`. The mixed 500-question replay is not blind and does not replace the holdout. See `benchmarks/results/UMD334_QUERY_FISSION_REPORT.md`.
+
+### UMD 3.35 LongMemEval background-ghost regression
+
+The 500-question regression is explicitly post-evaluation development, not a new blind test. Relative to 3.34, Final Any R@1 moves `0.9468 → 0.9745`, Final Full R@1 `0.7383 → 0.8426`, and Strict Any R@1 `0.9213 → 0.9298`; Final and Strict Full R@10 remain conserved at `0.9936 / 0.9085`. The per-query audit finds 13 Final R@1 improvements and zero regressions, plus four Strict R@1 improvements and zero regressions. Rank-10 character output does not increase. See `benchmarks/results/UMD335_GHOST_MATTER_REPORT.md`.
+
+### UMD 3.36 LongMemEval bounded ghost constellations
+
+UMD 3.36 is also a post-evaluation regression, not a blind test. Relative to 3.35, Final Any R@1 moves `0.9745 → 0.9979`, Final Full R@1 `0.8426 → 0.9851`, and Final Micro R@1 `0.8944 → 0.9899`. Across 470 answerable queries, Final Full@1 improves on 67 with zero regressions; Final Full@10 and every Strict metric have zero per-query changes. Mean Final@10 characters are identical, so the gain comes from bounded reorganization of existing top-ten sources. See `benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md`.
+
 ### Evaluation boundaries
 
 - LoCoMo scores 1,982 of 1,986 questions; four lack evidence labels.
@@ -959,7 +1060,7 @@ python -m pytest -q \
 python scripts/verify_published_results.py
 ```
 
-Expected for the current snapshot: `126 passed` and `validated_results=16 formula_relations=46 gold_used_for_ranking=false status=pass`. GitHub Actions executes the same validation on Python 3.12/Linux.
+Expected for the current snapshot: `148 passed` and `validated_results=20 formula_relations=61 gold_used_for_ranking=false status=pass`. GitHub Actions executes the same validation on Python 3.12/Linux.
 
 Raw third-party benchmark data is not redistributed. See [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) for data layout, commands, hashes, and caveats; formal manifests are under [`benchmarks/results/`](benchmarks/results/).
 

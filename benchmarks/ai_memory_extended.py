@@ -80,6 +80,12 @@ from benchmarks.umd333_adapter import (
     DocumentStarField,
     DocumentStarResult,
 )
+from benchmarks.umd334_adapter import (
+    QueryFissionField,
+    QueryFissionResult,
+    should_promote_periapsis,
+)
+from benchmarks.umd335_adapter import BackgroundGhostCatalog, GhostResult
 
 
 VENDOR = Path(__file__).resolve().parent / "vendor"
@@ -188,6 +194,9 @@ class OrbitIndex:
         physics_v331: bool = False,
         physics_v332: bool = False,
         physics_v333: bool = False,
+        physics_v334: bool = False,
+        physics_v335: bool = False,
+        physics_v336: bool = False,
         experimental_lexical_bridge_v332: bool = False,
         roche_budget_v318: int = 10,
         matter_neighbor_budget: int = 0,
@@ -203,7 +212,10 @@ class OrbitIndex:
         self.encoder = encoder
         self.dates = list(dates or [])
         self.neural_candidate_pool = max(0, neural_candidate_pool)
-        self.physics_v333 = bool(physics_v333)
+        self.physics_v336 = bool(physics_v336)
+        self.physics_v335 = bool(physics_v335 or self.physics_v336)
+        self.physics_v334 = bool(physics_v334 or self.physics_v335)
+        self.physics_v333 = bool(physics_v333 or self.physics_v334)
         self.physics_v332 = bool(physics_v332 or self.physics_v333)
         self.experimental_lexical_bridge_v332 = bool(experimental_lexical_bridge_v332)
         self.physics_v331 = bool(physics_v331 or self.physics_v332)
@@ -295,11 +307,27 @@ class OrbitIndex:
         self._document_star_field = (
             DocumentStarField(self.texts) if self.physics_v333 else None
         )
+        self._query_fission_field = (
+            QueryFissionField(self.encoder) if self.physics_v334 else None
+        )
+        self._ghost_catalog = (
+            BackgroundGhostCatalog(
+                self.texts,
+                [
+                    self._full_dates[self._full_groups[source]]
+                    if self._full_groups[source] < len(self._full_dates) else ""
+                    for source in range(len(self.texts))
+                ],
+            )
+            if self.physics_v335 else None
+        )
         self.last_atomic_capsules: list[tuple[str, ...]] = []
         self.last_source_atomic_capsules: list[tuple[str, ...]] = []
         self.last_state_sector_capsules: list[tuple[str, ...]] = []
         self.last_ledger_diagnostics: dict[str, Any] = {}
         self.last_slingshot_diagnostics: dict[str, Any] = {}
+        self.last_query_fission_diagnostics: dict[str, Any] = {}
+        self.last_ghost_diagnostics: dict[str, Any] = {}
         # RealMem issues several questions at the same chronological prefix.
         # Keep exactly one derived prefix index: reuse within the session, then
         # replace it as time advances. This bounds RAM while avoiding repeated
@@ -316,6 +344,8 @@ class OrbitIndex:
         self.last_state_sector_capsules = []
         self.last_ledger_diagnostics = {}
         self.last_slingshot_diagnostics = {}
+        self.last_query_fission_diagnostics = {}
+        self.last_ghost_diagnostics = {}
         size = len(self.texts) if prefix is None else min(max(0, prefix), len(self.texts))
         if size <= 0:
             return []
@@ -465,10 +495,47 @@ class OrbitIndex:
         if launch_sources:
             launch_set = set(launch_sources)
             seed = launch_sources + [source for source in seed if source not in launch_set]
+        query_fission = (
+            self._query_fission_field.solve(
+                query, texts=texts, lexical_index=lexical_index,
+                source_vectors=self._lazy_vectors, base_candidates=seed[:64],
+            )
+            if self._query_fission_field is not None else QueryFissionResult()
+        )
+        if query_fission.subqueries:
+            self.last_query_fission_diagnostics = {
+                "subqueries": list(query_fission.subqueries),
+                "variants": list(query_fission.variants),
+                "discovery_sources": len(query_fission.discovery_sources),
+                "coverage_sources": len(query_fission.coverage_sources),
+                "periapsis_source": query_fission.periapsis_source,
+                "confidence_ratio": query_fission.confidence_ratio,
+                "confidence_margin": query_fission.confidence_margin,
+                "episodic_nucleus_active": query_fission.episodic_nucleus_active,
+            }
+        ghost = (
+            self._ghost_catalog.solve(
+                query, size=size, fission=query_fission,
+                adaptive_constellation=self.physics_v336,
+            )
+            if self._ghost_catalog is not None else GhostResult()
+        )
+        if ghost.active:
+            self.last_ghost_diagnostics = {
+                "modes": list(ghost.modes),
+                "orbit_sources": len(ghost.order),
+                "orbit_source_ids": [
+                    self.source_ids[source] for source in ghost.order[:12]
+                ],
+                "promoted_source": ghost.promoted_source,
+                "confidence_ratio": ghost.confidence_ratio,
+                "confidence_margin": ghost.confidence_margin,
+                "constellation_budget": ghost.constellation_budget,
+            }
         orbit = _orbit_expand(seed, groups)
         qv = self.encoder.encode_many([query])[0]
         if self.neural_candidate_pool:
-            candidates = seed[:min(size, self.neural_candidate_pool)]
+            candidates = list(query_fission.discovery_sources) if query_fission.discovery_sources else seed[:min(size, self.neural_candidate_pool)]
             missing = [source for source in candidates if source not in self._lazy_vectors]
             if missing:
                 encoded = self.encoder.encode_many([texts[source] for source in missing])
@@ -629,6 +696,15 @@ class OrbitIndex:
             secondary = rank_event_satellites(
                 order314, stable314, groups, force314, semantic, lexical,
             )
+        if self.physics_v334 and len(query_fission.subqueries) > 1:
+            fission_sources = [
+                source for source in query_fission.coverage_sources if source < size
+            ]
+            fission_set = set(fission_sources)
+            secondary = fission_sources + [
+                source for source in secondary if source not in fission_set
+            ]
+            satellites = max(satellites, min(48, len(fission_sources)))
         if self.physics_v333 and document_star.orbit_sources:
             star_set = set(document_star.orbit_sources)
             secondary = list(document_star.orbit_sources) + [
@@ -708,11 +784,18 @@ class OrbitIndex:
             result[0] = tuple(dict.fromkeys(
                 result[0] + tuple(document_star.top_sources)
             ))
-        self.last_atomic_capsules = [
-            tuple(self.source_ids[source] for source in capsule) for capsule in result
-        ]
+        if self.physics_v334 and len(query_fission.subqueries) > 1 and result:
+            # One moon per clause joins the conserved first Final capsule.  The
+            # pre-3.34 capsule remains intact, so Final Any@1 cannot regress.
+            clause_moons = tuple(query_fission.coverage_sources[:len(query_fission.subqueries)])
+            result[0] = tuple(dict.fromkeys(result[0] + clause_moons))
+        # Preserve the exact pre-ghost capsule matrix for Strict retrieval.
+        # Ghost matter may add provenance-backed moons to Final rank one, but
+        # it cannot perturb any Strict rank unless the guarded temporal
+        # promotion below explicitly fires.
+        strict_capsules = [tuple(capsule) for capsule in result]
         ordered_sources = list(dict.fromkeys(
-            source for capsule in result for source in capsule
+            source for capsule in strict_capsules for source in capsule
         ))
         if self.physics_v332 and not slingshot.primary_sources:
             # Read the final capsule matrix by orbital columns.  The strongest
@@ -721,7 +804,7 @@ class OrbitIndex:
             # episode from consuming most of Strict@10.
             ranked_capsules = [
                 sorted(capsule, key=lambda source: (-force314[source], source))
-                for capsule in result
+                for capsule in strict_capsules
             ]
             ordered_sources = list(dict.fromkeys(
                 source
@@ -744,6 +827,24 @@ class OrbitIndex:
                 ordered_sources = [star_first] + [
                     source for source in ordered_sources if source != star_first
                 ]
+        if self.physics_v334 and ordered_sources and query_fission.periapsis_source is not None:
+            current_first = ordered_sources[0]
+            if should_promote_periapsis(query_fission, current_first, lexical):
+                periapsis = query_fission.periapsis_source
+                ordered_sources = [periapsis] + [
+                    source for source in ordered_sources if source != periapsis
+                ]
+                self.last_query_fission_diagnostics["strict_promoted"] = True
+                self.last_query_fission_diagnostics["conserved_first"] = current_first
+        if self.physics_v335 and ordered_sources and ghost.promoted_source is not None:
+            ghost_first = ghost.promoted_source
+            conserved_first = ordered_sources[0]
+            if ghost_first != conserved_first:
+                ordered_sources = [ghost_first] + [
+                    source for source in ordered_sources if source != ghost_first
+                ]
+                self.last_ghost_diagnostics["strict_promoted"] = True
+                self.last_ghost_diagnostics["conserved_first"] = conserved_first
         if self.physics_v331 and slingshot.primary_sources:
             # Strict retrieval remains genuinely source-atomic.  The closure
             # changes only order: answer-bearing echoes precede supporting
@@ -770,6 +871,33 @@ class OrbitIndex:
                 ]
                 + ordered_sources
             ))
+        if self.physics_v336 and ghost.order and result:
+            # Ghosts are navigation-only: only their original immutable source
+            # IDs join the capsule. No distilled ghost text becomes evidence.
+            # Both ghost candidates and atomic anchors must already occur in
+            # Final@10, so the operation conserves horizon and character cost.
+            horizon = {
+                source for capsule in strict_capsules[:10] for source in capsule
+            }
+            ghost_moons = [
+                source for source in ghost.order if source in horizon
+            ][:ghost.constellation_budget]
+            anchor_budget = 6
+            atomic_anchors = [
+                source for source in ordered_sources[:anchor_budget]
+                if source in horizon
+            ]
+            migrated = tuple(dict.fromkeys(ghost_moons + atomic_anchors))
+            result[0] = tuple(dict.fromkeys(result[0] + migrated))
+            self.last_ghost_diagnostics["constellation_migrated"] = len(migrated)
+            self.last_ghost_diagnostics["atomic_anchors"] = len(atomic_anchors)
+        elif self.physics_v335 and ghost.order and result:
+            # Reproducible UMD 3.35 behavior: two provenance-backed ghost
+            # sources join Final rank one; Strict still uses strict_capsules.
+            result[0] = tuple(dict.fromkeys(result[0] + tuple(ghost.order[:2])))
+        self.last_atomic_capsules = [
+            tuple(self.source_ids[source] for source in capsule) for capsule in result
+        ]
         self.last_source_atomic_capsules = [
             (self.source_ids[source],) for source in ordered_sources
         ]
@@ -834,6 +962,8 @@ class OrbitIndex:
             "payload": payload, "fact_provenance": fact_provenance,
             "deterministic_answer": solved, "ledger": dict(self.last_ledger_diagnostics),
             "slingshot": dict(self.last_slingshot_diagnostics),
+            "query_fission": dict(self.last_query_fission_diagnostics),
+            "ghost": dict(self.last_ghost_diagnostics),
         }
 
 

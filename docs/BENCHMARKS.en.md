@@ -15,7 +15,10 @@ The table standardizes reporting fields, not task difficulty; raw scores from di
 | Benchmark | Evaluated scope | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
-| LongMemEval_S | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.28.2 frozen | 470 | 0.9468 | 1.0000 | 0.9936 | 0.8979 | 0.9745 | 0.8021 |
+| LongMemEval_S 3.34 frozen holdout | 376 | 0.9415 | 1.0000 | 0.9920 | 0.9096 | 0.9840 | 0.9069 |
+| LongMemEval_S 3.35 post-evaluation regression | 470 | 0.9745 | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
+| LongMemEval_S 3.36 post-evaluation regression | 470 | **0.9979** | 1.0000 | 0.9936 | 0.9298 | 0.9872 | 0.9085 |
 | MemBench stratified proxy | 550 | 0.8200 | 0.9982 | 0.9418 | 0.5782 | 0.9509 | 0.6000 |
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
@@ -65,6 +68,18 @@ The same-capacity 600-chunk run reaches `0.9370 / 0.9701 / 0.9104 / 0.7065`, but
 ## 3.3 UMD 3.32.1 → 3.33.1 binary document stars
 
 The four core metrics rise from `0.8281 / 0.7526 / 0.7378 / 0.5095` to `0.8681 / 0.7813 / 0.7639 / 0.5200`. The subset-budget Final Full R@10 implementation ceiling is about `0.9531`, of which the result reaches `81.97%`; Strict Full reaches `75.44%` of its fixed ceiling. See `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`.
+
+### 3.4 UMD 3.34 query fission on LongMemEval
+
+Questions 0–99 are an explicitly post-dataset development replay (94 answerable). Parameters were then frozen before scoring questions 100–499 as a 376-answerable holdout. On that holdout, Strict Any R@1 rises `0.8936 → 0.9096`, Strict MRR `0.9138 → 0.9371`, and Strict Full R@10 `0.8218 → 0.9069`; Final Any R@1 and Full R@10 remain `0.9415 / 0.9920`. The combined 500-question replay is not blind and is reported separately. See `benchmarks/results/UMD334_QUERY_FISSION_REPORT.md`.
+
+### 3.5 UMD 3.35 background ghost matter
+
+The 500-question result is a post-evaluation regression, not a blind test. Relative to 3.34, Final Any R@1 moves `0.9468 → 0.9745`, Final Full R@1 `0.7383 → 0.8426`, and Strict Any R@1 `0.9213 → 0.9298`, while Final/Strict Full R@10 remain conserved at `0.9936 / 0.9085`. Per-query comparison yields 13 Final R@1 improvements with zero regressions and four Strict R@1 improvements with zero regressions. See `benchmarks/results/UMD335_GHOST_MATTER_REPORT.md`.
+
+### 3.6 UMD 3.36 bounded ghost constellations
+
+Relative to 3.35, Final Any R@1 moves `0.9745 → 0.9979` and Final Full R@1 `0.8426 → 0.9851`. Across 470 answerable queries, Final Full@1 improves on 67 with zero regressions; Final Full@10 and every Strict metric have zero per-query changes, with identical mean Final@10 characters. This remains a post-evaluation regression. See `benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md`.
 
 ## 4. Scope and bias
 
