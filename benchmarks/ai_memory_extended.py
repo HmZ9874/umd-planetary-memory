@@ -11,12 +11,13 @@ import argparse
 import ast
 import csv
 import json
+import math
 import re
 import statistics
 import time
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 import numpy as np
 
@@ -72,6 +73,13 @@ from benchmarks.umd327_adapter import (
     solve_compact_numeric,
 )
 from benchmarks.umd330_adapter import FactSlingshotGraph, SlingshotResult
+from benchmarks.umd331_adapter import EvidenceClosureGraph
+from benchmarks.umd332_adapter import RelationSuperpositionGraph
+from benchmarks.umd333_adapter import (
+    AbsorbingRelationGraph,
+    DocumentStarField,
+    DocumentStarResult,
+)
 
 
 VENDOR = Path(__file__).resolve().parent / "vendor"
@@ -84,6 +92,50 @@ _ESCAPE_VELOCITY_QUERY_RE = re.compile(
     r"\band\s+how\b",
     re.IGNORECASE,
 )
+
+_SUPERPOSITION_BRIDGE_QUERY_RE = re.compile(
+    r"\b(?:both|same|older|younger|companion|whose|portrayed|starring|"
+    r"recruited|formed by|located in|based in|fight song|main campus|"
+    r"who .+ who|of the .+ (?:who|that|whose)|and .+ (?:both|same))\b",
+    re.IGNORECASE,
+)
+
+
+def _bounded_lexical_bridge(
+    query: str, texts: Sequence[str], index: Any, lexical_order: Sequence[int],
+) -> list[float]:
+    """Two-hop pseudo-relevance field over rare terms in top lexical chunks.
+
+    A term must occur in at least two and at most twelve chunks, so one seed
+    can expose an entity or title that leads to another source without letting
+    corpus-wide generic words dominate.  The field is query/source-only and is
+    disabled for short direct questions and index views without postings.
+    """
+    size = len(texts)
+    query_tokens = set(tokenize(query))
+    if (
+        size < 2
+        or not hasattr(index, "postings")
+        or (len(query_tokens) < 10 and not _SUPERPOSITION_BRIDGE_QUERY_RE.search(query))
+    ):
+        return [0.0] * size
+    bridge = [0.0] * size
+    for seed_rank, seed in enumerate(lexical_order[:6], 1):
+        weighted_terms: list[tuple[float, str]] = []
+        for term in set(tokenize(texts[seed])) - query_tokens:
+            if len(term) < 4:
+                continue
+            posting = index.postings.get(term)
+            if posting is None or not 2 <= len(posting) <= 12:
+                continue
+            idf = math.log(1.0 + (size - len(posting) + 0.5) / (len(posting) + 0.5))
+            weighted_terms.append((idf, term))
+        for idf, term in sorted(weighted_terms, reverse=True)[:64]:
+            for source, frequency in index.postings[term]:
+                if source == seed or source >= size:
+                    continue
+                bridge[source] += idf * min(2, frequency) / seed_rank
+    return unit_scores(bridge)
 
 
 def escape_velocity_budget(query: str, base_budget: int, ceiling: int = 288) -> int:
@@ -133,6 +185,10 @@ class OrbitIndex:
         physics_v326: bool = False,
         physics_v327: bool = False,
         physics_v330: bool = False,
+        physics_v331: bool = False,
+        physics_v332: bool = False,
+        physics_v333: bool = False,
+        experimental_lexical_bridge_v332: bool = False,
         roche_budget_v318: int = 10,
         matter_neighbor_budget: int = 0,
         cross_encoder: Any | None = None,
@@ -147,7 +203,11 @@ class OrbitIndex:
         self.encoder = encoder
         self.dates = list(dates or [])
         self.neural_candidate_pool = max(0, neural_candidate_pool)
-        self.physics_v330 = bool(physics_v330)
+        self.physics_v333 = bool(physics_v333)
+        self.physics_v332 = bool(physics_v332 or self.physics_v333)
+        self.experimental_lexical_bridge_v332 = bool(experimental_lexical_bridge_v332)
+        self.physics_v331 = bool(physics_v331 or self.physics_v332)
+        self.physics_v330 = bool(physics_v330 or self.physics_v331)
         self.physics_v327 = bool(physics_v327 or self.physics_v330)
         self.physics_v326 = bool(physics_v326 or self.physics_v327)
         self.physics_v325 = bool(physics_v325 or self.physics_v326)
@@ -222,7 +282,18 @@ class OrbitIndex:
             else None
         )
         self._slingshot_graph = (
-            FactSlingshotGraph(self.texts) if self.physics_v330 else None
+            AbsorbingRelationGraph(self.texts)
+            if self.physics_v333
+            else RelationSuperpositionGraph(self.texts)
+            if self.physics_v332
+            else EvidenceClosureGraph(self.texts)
+            if self.physics_v331
+            else FactSlingshotGraph(self.texts)
+            if self.physics_v330
+            else None
+        )
+        self._document_star_field = (
+            DocumentStarField(self.texts) if self.physics_v333 else None
         )
         self.last_atomic_capsules: list[tuple[str, ...]] = []
         self.last_source_atomic_capsules: list[tuple[str, ...]] = []
@@ -252,12 +323,27 @@ class OrbitIndex:
             self._slingshot_graph.solve(query, size=size)
             if self._slingshot_graph is not None else SlingshotResult()
         )
+        document_star = (
+            self._document_star_field.solve(query, size=size)
+            if self._document_star_field is not None else DocumentStarResult()
+        )
         if slingshot.primary_sources:
             self.last_slingshot_diagnostics = {
                 "answer": slingshot.answer,
                 "primary_sources": list(slingshot.primary_sources),
                 "echo_sources": len(slingshot.echo_sources),
+                "shadow_sources": len(getattr(slingshot, "shadow_sources", ())),
+                "dependency_sources": len(getattr(slingshot, "dependency_sources", ())),
                 "path": [list(step) for step in slingshot.path],
+                "terminal_relations": list(getattr(slingshot, "terminal_relations", ())),
+            }
+        if document_star.top_sources:
+            self.last_slingshot_diagnostics["document_star"] = {
+                "documents": document_star.documents,
+                "top_sources": len(document_star.top_sources),
+                "orbit_sources": len(document_star.orbit_sources),
+                "score_ratio": document_star.score_ratio,
+                "score_margin": document_star.score_margin,
             }
         if self.physics_v327 and self._census_ledger is not None and is_census_query(query):
             as_of = self.dates[size - 1] if size <= len(self.dates) and size else None
@@ -359,8 +445,18 @@ class OrbitIndex:
         planet_order = ranking(planet_raw)
         lexical_rr = reciprocal_ranks(lexical_order)
         planet_rr = reciprocal_ranks(planet_order)
+        lexical_bridge = (
+            _bounded_lexical_bridge(query, texts, lexical_index, lexical_order)
+            if (
+                self.physics_v332
+                and self.experimental_lexical_bridge_v332
+                and not slingshot.primary_sources
+            )
+            else [0.0] * size
+        )
         seed = ranking([
             lexical_rr[index] + 0.72 * planet_rr[groups[index]]
+            + 0.44 * lexical_bridge[index]
             for index in range(size)
         ])
         launch_sources = list(dict.fromkeys(
@@ -402,6 +498,15 @@ class OrbitIndex:
             ]
         force = _force(control_semantic, lexical, planetary, char, entity, temporal, graph)
         focus_force = _force(semantic, lexical, planetary, char, entity, temporal, graph)
+        if self.physics_v332 and any(lexical_bridge):
+            force = [
+                0.82 * value + 0.18 * lexical_bridge[index]
+                for index, value in enumerate(force)
+            ]
+            focus_force = [
+                0.82 * value + 0.18 * lexical_bridge[index]
+                for index, value in enumerate(focus_force)
+            ]
         if self.physics_v316:
             focus_force = apply_state_field(force, state_mass_adjustment(query, texts))
         if late_scores is not None:
@@ -524,11 +629,39 @@ class OrbitIndex:
             secondary = rank_event_satellites(
                 order314, stable314, groups, force314, semantic, lexical,
             )
+        if self.physics_v333 and document_star.orbit_sources:
+            star_set = set(document_star.orbit_sources)
+            secondary = list(document_star.orbit_sources) + [
+                source for source in secondary if source not in star_set
+            ]
+            satellites = max(
+                satellites, min(48, len(document_star.orbit_sources)),
+            )
+        closure_sources: list[int] = []
         if slingshot.echo_sources:
-            echo = [source for source in slingshot.echo_sources if source < size]
-            echo_set = set(echo)
-            secondary = echo + [source for source in secondary if source not in echo_set]
-            satellites = max(satellites, min(96, len(echo)))
+            closure_sources.extend(
+                source for source in slingshot.echo_sources if source < size
+            )
+        if self.physics_v331:
+            if self.physics_v332:
+                closure_sources.extend(
+                    source
+                    for source in getattr(slingshot, "shadow_sources", ())
+                    if source < size
+                )
+            closure_sources.extend(
+                source
+                for source in getattr(slingshot, "dependency_sources", ())
+                if source < size
+            )
+        if closure_sources:
+            closure_sources = list(dict.fromkeys(closure_sources))
+            closure_set = set(closure_sources)
+            secondary = closure_sources + [
+                source for source in secondary if source not in closure_set
+            ]
+            closure_ceiling = 256 if self.physics_v332 else 96
+            satellites = max(satellites, min(closure_ceiling, len(closure_sources)))
         result = compress_event_horizon(
             stable314, secondary, max_extra_sources=satellites,
         )
@@ -568,12 +701,75 @@ class OrbitIndex:
                 source_texts=texts,
                 source_dates=[dates[groups[source]] if groups[source] < len(dates) else "" for source in range(size)],
             )
+        if self.physics_v333 and document_star.top_sources and result:
+            # The original first capsule is conserved.  Document-star moons
+            # are appended inside the same Final rank, so this cannot remove a
+            # prior top-one hit.  Capacity changes remain explicit in reports.
+            result[0] = tuple(dict.fromkeys(
+                result[0] + tuple(document_star.top_sources)
+            ))
         self.last_atomic_capsules = [
             tuple(self.source_ids[source] for source in capsule) for capsule in result
         ]
         ordered_sources = list(dict.fromkeys(
             source for capsule in result for source in capsule
         ))
+        if self.physics_v332 and not slingshot.primary_sources:
+            # Read the final capsule matrix by orbital columns.  The strongest
+            # source from each top capsule reaches the strict horizon before a
+            # second source from the same capsule, preventing an early wide
+            # episode from consuming most of Strict@10.
+            ranked_capsules = [
+                sorted(capsule, key=lambda source: (-force314[source], source))
+                for capsule in result
+            ]
+            ordered_sources = list(dict.fromkeys(
+                source
+                for depth in range(max(map(len, ranked_capsules), default=0))
+                for capsule in ranked_capsules
+                if depth < len(capsule)
+                for source in (capsule[depth],)
+            ))
+        if (
+            self.physics_v333
+            and not slingshot.primary_sources
+            and document_star.best_sources
+        ):
+            # Promote a document-local atomic moon only when the complete
+            # document has a stable lead over the runner-up.  Otherwise keep
+            # the conserved 3.32.1 first source.  Strict remains one source per
+            # rank regardless of this choice.
+            star_first = document_star.best_sources[0]
+            if document_star.score_ratio >= 1.13:
+                ordered_sources = [star_first] + [
+                    source for source in ordered_sources if source != star_first
+                ]
+        if self.physics_v331 and slingshot.primary_sources:
+            # Strict retrieval remains genuinely source-atomic.  The closure
+            # changes only order: answer-bearing echoes precede supporting
+            # dependencies, followed by the conserved 3.30 orbit.  This makes
+            # complete recall possible without widening a rank position.
+            ordered_sources = list(dict.fromkeys(
+                [
+                    source for source in slingshot.primary_sources
+                    if source < size
+                ]
+                + [
+                    source for source in slingshot.echo_sources
+                    if source < size
+                ]
+                + [
+                    source
+                    for source in getattr(slingshot, "shadow_sources", ())
+                    if self.physics_v332 and source < size
+                ]
+                + [
+                    source
+                    for source in getattr(slingshot, "dependency_sources", ())
+                    if source < size
+                ]
+                + ordered_sources
+            ))
         self.last_source_atomic_capsules = [
             (self.source_ids[source],) for source in ordered_sources
         ]

@@ -1,0 +1,192 @@
+{
+  "memoryagentbench": {
+    "benchmark": "MemoryAgentBench",
+    "umd_version": "3.31",
+    "status": "official_data_answer_bearing_retrieval_proxy",
+    "competencies_run": [
+      "Accurate Retrieval",
+      "Conflict Resolution"
+    ],
+    "competencies_not_scored": [
+      "Test-Time Learning",
+      "Long-Range Understanding"
+    ],
+    "chunk_chars": 1200,
+    "chunk_overlap": 200,
+    "max_chunks_per_context": null,
+    "contexts_total": 30,
+    "contexts_run": 30,
+    "contexts_skipped_for_capacity": 0,
+    "questions_skipped_for_capacity": 0,
+    "questions": 2800,
+    "answer_bearing_questions": 1152,
+    "by_competency": {
+      "Accurate_Retrieval": {
+        "questions": 2000,
+        "answer_bearing_questions": 352,
+        "no_answer_bearing_passage": 1648,
+        "chunks": 26971,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 352,
+          "gold_evidence_items": 19585,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7445053210678211,
+          "any_evidence_recall": {
+            "1": 0.6534090909090909,
+            "5": 0.8693181818181818,
+            "10": 0.9204545454545454
+          },
+          "full_evidence_recall": {
+            "1": 0.17897727272727273,
+            "5": 0.32386363636363635,
+            "10": 0.4147727272727273
+          },
+          "micro_evidence_recall": {
+            "1": 0.09772785294868522,
+            "5": 0.11564973193770743,
+            "10": 0.12759765126372224
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 352,
+          "gold_evidence_items": 19585,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.5385455110934182,
+          "any_evidence_recall": {
+            "1": 0.4602272727272727,
+            "5": 0.6363636363636364,
+            "10": 0.7215909090909091
+          },
+          "full_evidence_recall": {
+            "1": 0.10795454545454546,
+            "5": 0.17897727272727273,
+            "10": 0.22727272727272727
+          },
+          "micro_evidence_recall": {
+            "1": 0.00827163645647179,
+            "5": 0.016696451365841206,
+            "10": 0.024253255042124073
+          }
+        }
+      },
+      "Conflict_Resolution": {
+        "questions": 800,
+        "answer_bearing_questions": 800,
+        "no_answer_bearing_passage": 0,
+        "chunks": 3114,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 800,
+          "gold_evidence_items": 26648,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.826889880952381,
+          "any_evidence_recall": {
+            "1": 0.77125,
+            "5": 0.905,
+            "10": 0.935
+          },
+          "full_evidence_recall": {
+            "1": 0.19,
+            "5": 0.39,
+            "10": 0.70875
+          },
+          "micro_evidence_recall": {
+            "1": 0.06672170519363554,
+            "5": 0.23318823176223355,
+            "10": 0.39909186430501353
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 800,
+          "gold_evidence_items": 26648,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7667844303963666,
+          "any_evidence_recall": {
+            "1": 0.71875,
+            "5": 0.83,
+            "10": 0.87625
+          },
+          "full_evidence_recall": {
+            "1": 0.15,
+            "5": 0.40625,
+            "10": 0.49625
+          },
+          "micro_evidence_recall": {
+            "1": 0.02157760432302612,
+            "5": 0.07749174422095467,
+            "10": 0.12004653257280096
+          }
+        }
+      }
+    },
+    "final_capsule_retrieval": {
+      "evaluated_queries": 1152,
+      "gold_evidence_items": 46233,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8017168209876543,
+      "any_evidence_recall": {
+        "1": 0.7352430555555556,
+        "5": 0.8940972222222222,
+        "10": 0.9305555555555556
+      },
+      "full_evidence_recall": {
+        "1": 0.18663194444444445,
+        "5": 0.3697916666666667,
+        "10": 0.6189236111111112
+      },
+      "micro_evidence_recall": {
+        "1": 0.07985637964224689,
+        "5": 0.18339714057058812,
+        "10": 0.28408279800142755
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 1152,
+      "gold_evidence_items": 46233,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.6970447606093546,
+      "any_evidence_recall": {
+        "1": 0.6397569444444444,
+        "5": 0.7708333333333334,
+        "10": 0.8289930555555556
+      },
+      "full_evidence_recall": {
+        "1": 0.1371527777777778,
+        "5": 0.3368055555555556,
+        "10": 0.4140625
+      },
+      "micro_evidence_recall": {
+        "1": 0.015940994527718296,
+        "5": 0.051737936106244456,
+        "10": 0.079467047347133
+      }
+    },
+    "official_end_to_end_accuracy_run": false,
+    "gold_used_for_ranking": false,
+    "data_sha256": {
+      "Accurate_Retrieval": "56c3cd80fb6731a3e53cd1a6be3148f54df60ff2d290ee50e28f8acebf9655c1",
+      "Conflict_Resolution": "24d5c3f09ce0ce15625cb9f8a98f44f0d864ca6c94d7b4ad04eb697ca3a5ff45"
+    },
+    "runtime_seconds": 1218.8541600999997
+  },
+  "metadata": {
+    "adapter": "UMD 3.31 evidence closure / UMD 3.30 slingshot / UMD 3.28.2 conserved control laws",
+    "full_run": true,
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 18141,
+      "cache_hits": 4188,
+      "cache_misses": 18141,
+      "neural_calls": 18141,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

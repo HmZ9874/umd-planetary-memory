@@ -113,6 +113,28 @@ The final answer-fact provenance is promoted to atomic rank one instead of stopp
 
 The graph object is a model prediction, not the benchmark answer. Other visible sources containing that predicted object form an echo set of at most 96 satellites. Echoes append to capsules and never remove protected anchors, increasing full-set recall while preserving the old prefix.
 
+## 9.5 UMD 3.31 output-slot evidence closure
+
+The main 3.30 failure was not the absence of a graph. It could mistake the longest relation cue in a question for the requested output: “where did the spouse die?” might stop at `married` instead of continuing to `died_city`. UMD 3.31 assigns terminal mass `Ω(r|q)` from an explicit answer-slot grammar and then searches a bounded four-hop closure.
+
+A terminal hit produces three provenance layers: the answer fact (`Primary`), all visible occurrences of the predicted answer (`Echo`), and intermediate path sources (`Dependency`). The strict channel deduplicates `Primary → Echo → Dependency → conserved 3.30 order`. Every rank remains exactly one source, so full-recall gains do not come from widening the ranking unit.
+
+This path still activates only for dense numbered fact universes. A local scan of all ten LoCoMo conversations activated neither the 3.30 nor 3.31 graph (0/10).
+
+## 9.6 UMD 3.32.1 relation superposition and version shadows
+
+UMD 3.32.1 represents the terminal relation as a superposition of answer-head, output-slot, and explicit relation cues rather than a single label. A five-hop search permits a necessary implicit bridge with small negative vacuum energy. Terminal mass, relation coverage, and bounded multi-path consensus jointly select the predicted object. Equal-ordinal fact fragments are resolved deterministically in favor of the more complete object and provenance set.
+
+The current answer still enters `Primary → Echo` first. Historical values of the same subject–relation pair then enter `Shadow`, followed by path dependencies. This supports both current-state and evolution questions without allowing stale values to occupy rank one. Final closure carries at most 256 satellite sources. Strict always retains one source per rank and column-unfolds ordinary capsules to improve large-set complete recall. Capacity and ranking changes are reported separately.
+
+A rare-entity lexical bridge and an MS MARCO cross-encoder both reduced R@1 in local ablations and are not enabled by default. The relation-superposition graph remains gated to dense numbered fact universes; ordinary LoCoMo dialogue stays on the frozen path.
+
+## 9.7 UMD 3.33.1 binary document stars and terminal absorption
+
+UMD 3.33.1 losslessly reconstructs `Document N:` boundaries from a regular fixed-window stream, treating complete documents as stars and overlapping windows as source moons. The first Final capsule conserves old sources and appends moons from the top two stars. Strict remains one source per rank and promotes a document-local source only at a `1.13×` first/second document-score ratio.
+
+The structured graph absorbs a path after complete query-supported terminal coverage, rejects entity cycles, and subtracts `1.25` energy for every repeated relation. This repairs direct hits that previously wandered through loops such as `citizen → head_government → citizen`. Ordinary dialogue, irregular windows, and contexts with fewer than 20 document boundaries disable document stars.
+
 ## 10. Persistence, security and tenancy
 
 UMD 3.6+ includes SQLite durability, bounded active RAM, per-tenant AES-256-GCM ciphertext, an HMAC-chained transaction log, atomic rollback/recovery, tenant isolation, ACL/ABAC, capability tokens, key rotation, wrong-key rejection and embedding-encoder identity checks.
@@ -133,6 +155,9 @@ The master key must live outside the database in a KMS, HSM or secret manager.
 | 3.25–3.28 | antimatter forgetting, census, versioned facts, structured ledger and multi-orbit retrieval |
 | 3.29 | incremental coverage and query/state caching without ranking changes |
 | 3.30 | versioned fact graph, three-hop slingshot and echo asteroid belt |
+| 3.31 | output-slot relations, four-hop evidence closure, dependency provenance and strict atomic closure order |
+| 3.32.1 | relation superposition, five-hop coverage collapse, answer-path consensus, version shadows and strict atomic column unfolding |
+| 3.33.1 | overlap reconstruction, binary document stars, confidence gate, terminal absorption and cycle energy |
 
 The repository retains the implementation, tests and design records for the complete lineage.
 
@@ -144,4 +169,3 @@ The repository retains the implementation, tests and design records for the comp
 - Common predicted objects require a hard echo budget to prevent context explosion.
 - There is no seven-day real-user failure, cost and quality-drift report yet.
 - The work is not peer reviewed and has no official leaderboard certification.
-

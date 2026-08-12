@@ -11,7 +11,6 @@ import argparse
 import hashlib
 import json
 import re
-import statistics
 import time
 import unicodedata
 from collections import defaultdict
@@ -39,10 +38,16 @@ CHUNK_OVERLAP = 200
 def _index(
     texts: Sequence[str], groups: Sequence[int], source_ids: Sequence[str],
     encoder: FastEmbedEncoder, dates: Sequence[str] | None = None,
+    *, physics_v331: bool = False, physics_v332: bool = False,
+    physics_v333: bool = False,
 ):
-    """UMD 3.30 index with the 3.28.2 frozen control laws conserved."""
+    """UMD 3.30-3.32 index with the 3.28.2 control laws conserved."""
     return _frozen_index(
-        texts, groups, source_ids, encoder, dates, physics_v330=True,
+        texts, groups, source_ids, encoder, dates,
+        physics_v330=True,
+        physics_v331=physics_v331 or physics_v332 or physics_v333,
+        physics_v332=physics_v332 or physics_v333,
+        physics_v333=physics_v333,
     )
 
 
@@ -136,13 +141,21 @@ def _write_checkpoint(path: Path, value: dict[str, Any]) -> None:
 
 def run_memoryagentbench(
     encoder: FastEmbedEncoder, *, max_chunks: int | None = None,
+    physics_v331: bool = False, physics_v332: bool = False,
+    physics_v333: bool = False,
 ) -> dict[str, Any]:
     """Answer-bearing passage recall for the AR and CR competencies."""
     started = time.perf_counter()
     data_root = DATA / "MemoryAgentBench" / "data"
+    version = (
+        "umd3331" if physics_v333
+        else "umd3321" if physics_v332
+        else "umd331" if physics_v331
+        else "umd330"
+    )
     checkpoint_path = RESULTS / (
-        f"umd330_memoryagentbench_capacity_{max_chunks}_checkpoint.json"
-        if max_chunks is not None else "umd330_memoryagentbench_checkpoint.json"
+        f"{version}_memoryagentbench_capacity_{max_chunks}_checkpoint.json"
+        if max_chunks is not None else f"{version}_memoryagentbench_checkpoint.json"
     )
     checkpoint = _load_checkpoint(checkpoint_path)
     selected = {
@@ -164,7 +177,12 @@ def run_memoryagentbench(
                 continue
             ids = [f"{key}/chunk/{number}" for number in range(len(texts))]
             normalized_texts = [_normalize(text) for text in texts]
-            index = _index(texts, list(range(len(texts))), ids, encoder)
+            index = _index(
+                texts, list(range(len(texts))), ids, encoder,
+                physics_v331=physics_v331 or physics_v332 or physics_v333,
+                physics_v332=physics_v332 or physics_v333,
+                physics_v333=physics_v333,
+            )
             metrics = _metric_pair()
             questions = 0
             no_answer_bearing_passage = 0
@@ -204,6 +222,12 @@ def run_memoryagentbench(
     records = list(by_competency.values())
     return {
         "benchmark": "MemoryAgentBench",
+        "umd_version": (
+            "3.33.1" if physics_v333
+            else "3.32.1" if physics_v332
+            else "3.31" if physics_v331
+            else "3.30"
+        ),
         "status": (
             "official_data_capacity_bounded_answer_bearing_retrieval_proxy"
             if max_chunks is not None else "official_data_answer_bearing_retrieval_proxy"
@@ -716,6 +740,18 @@ def main() -> None:
         "--full", action="store_true",
         help="Run every official context/question instead of the capacity tier.",
     )
+    parser.add_argument(
+        "--physics-v331", action="store_true",
+        help="Enable the gold-blind UMD 3.31 evidence-closure field.",
+    )
+    parser.add_argument(
+        "--physics-v332", action="store_true",
+        help="Enable the gold-blind UMD 3.32 relation-superposition field.",
+    )
+    parser.add_argument(
+        "--physics-v333", action="store_true",
+        help="Enable the gold-blind UMD 3.33 document-star hierarchy.",
+    )
     args = parser.parse_args()
     encoder = FastEmbedEncoder(
         cache_dir=MODEL_CACHE, batch_size=128, cache_size=32768, threads=16,
@@ -731,6 +767,9 @@ def main() -> None:
     if args.benchmark == "memoryagentbench":
         result = run_memoryagentbench(
             encoder, max_chunks=None if args.full else 600,
+            physics_v331=args.physics_v331 or args.physics_v332 or args.physics_v333,
+            physics_v332=args.physics_v332 or args.physics_v333,
+            physics_v333=args.physics_v333,
         )
     elif args.benchmark == "evermembench":
         result = run_evermembench(
@@ -745,7 +784,23 @@ def main() -> None:
     payload = {
         args.benchmark: result,
         "metadata": {
-            "adapter": "UMD 3.30 slingshot / UMD 3.28.2 conserved control laws",
+            "adapter": (
+                "UMD 3.33.1 binary document stars and absorbing relation boundary / "
+                "UMD 3.32.1 relation superposition and version shadows / "
+                "UMD 3.31 evidence closure / UMD 3.30 slingshot / "
+                "UMD 3.28.2 conserved control laws"
+                if args.physics_v333
+                else
+                "UMD 3.32.1 relation superposition and version shadows / "
+                "UMD 3.31 evidence closure / "
+                "UMD 3.30 slingshot / UMD 3.28.2 conserved control laws"
+                if args.physics_v332
+                else
+                "UMD 3.31 evidence closure / UMD 3.30 slingshot / "
+                "UMD 3.28.2 conserved control laws"
+                if args.physics_v331
+                else "UMD 3.30 slingshot / UMD 3.28.2 conserved control laws"
+            ),
             "full_run": args.full,
             "gold_read_after_retrieval": True,
             "gold_used_for_ranking": False,
