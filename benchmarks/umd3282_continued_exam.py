@@ -150,6 +150,7 @@ def run_memoryagentbench(
     physics_v333: bool = False, physics_v334: bool = False,
     physics_v335: bool = False,
     physics_v336: bool = False,
+    checkpoint_name: str | None = None,
 ) -> dict[str, Any]:
     """Answer-bearing passage recall for the AR and CR competencies."""
     started = time.perf_counter()
@@ -163,10 +164,10 @@ def run_memoryagentbench(
         else "umd331" if physics_v331
         else "umd330"
     )
-    checkpoint_path = RESULTS / (
+    checkpoint_path = RESULTS / (checkpoint_name or (
         f"{version}_memoryagentbench_capacity_{max_chunks}_checkpoint.json"
         if max_chunks is not None else f"{version}_memoryagentbench_checkpoint.json"
-    )
+    ))
     checkpoint = _load_checkpoint(checkpoint_path)
     selected = {
         "Accurate_Retrieval": data_root / "Accurate_Retrieval-00000-of-00001.parquet",
@@ -298,13 +299,14 @@ def _even_sample(rows: Sequence[Any], limit: int | None) -> list[Any]:
 
 def run_evermembench(
     encoder: FastEmbedEncoder, *, questions_per_dataset: int | None = None,
+    checkpoint_name: str | None = None,
 ) -> dict[str, Any]:
     started = time.perf_counter()
     root = DATA / "EverMemBench" / "dataset"
-    checkpoint_path = RESULTS / (
+    checkpoint_path = RESULTS / (checkpoint_name or (
         f"umd3282_evermembench_capacity_{questions_per_dataset}_checkpoint.json"
         if questions_per_dataset is not None else "umd3282_evermembench_checkpoint.json"
-    )
+    ))
     checkpoint = _load_checkpoint(checkpoint_path)
     for dialogue_path in sorted(root.glob("*/dialogue_en.json")):
         user_id = dialogue_path.parent.name
@@ -780,7 +782,19 @@ def main() -> None:
         "--physics-v336", action="store_true",
         help="Enable UMD 3.36 bounded ghost constellations.",
     )
+    parser.add_argument(
+        "--run-id",
+        help=(
+            "Use isolated checkpoint files prefixed by this identifier. "
+            "This prevents a rerun from silently reusing historical rankings."
+        ),
+    )
     args = parser.parse_args()
+    if args.run_id and any(
+        not (character.isalnum() or character in "-_")
+        for character in args.run_id
+    ):
+        parser.error("--run-id may contain only letters, digits, '-' and '_'")
     encoder = FastEmbedEncoder(
         cache_dir=MODEL_CACHE, batch_size=128, cache_size=32768, threads=16,
     )
@@ -801,10 +815,18 @@ def main() -> None:
             physics_v334=args.physics_v334 or args.physics_v335 or args.physics_v336,
             physics_v335=args.physics_v335 or args.physics_v336,
             physics_v336=args.physics_v336,
+            checkpoint_name=(
+                f"{args.run_id}_memoryagentbench_checkpoint.json"
+                if args.run_id else None
+            ),
         )
     elif args.benchmark == "evermembench":
         result = run_evermembench(
             encoder, questions_per_dataset=None if args.full else 50,
+            checkpoint_name=(
+                f"{args.run_id}_evermembench_checkpoint.json"
+                if args.run_id else None
+            ),
         )
     elif args.benchmark == "longmemeval_v2":
         result = run_longmemeval_v2(
@@ -857,6 +879,7 @@ def main() -> None:
                 else "UMD 3.30 slingshot / UMD 3.28.2 conserved control laws"
             ),
             "full_run": args.full,
+            "run_id": args.run_id,
             "gold_read_after_retrieval": True,
             "gold_used_for_ranking": False,
             "parameters_frozen": True,

@@ -1,0 +1,352 @@
+{
+  "longmemeval": {
+    "benchmark": "LongMemEval_S_cleaned",
+    "umd_version": "3.34-development-replay",
+    "question_slice": {
+      "start": 100,
+      "stop": 500
+    },
+    "questions": 400,
+    "answerable_questions": 376,
+    "abstention_questions": 24,
+    "questions_without_evidence": 0,
+    "final_capsule_retrieval": {
+      "evaluated_queries": 376,
+      "gold_evidence_items": 726,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.9629063238770686,
+      "any_evidence_recall": {
+        "1": 0.9414893617021277,
+        "5": 0.9946808510638298,
+        "10": 1.0
+      },
+      "full_evidence_recall": {
+        "1": 0.6835106382978723,
+        "5": 0.9654255319148937,
+        "10": 0.9920212765957447
+      },
+      "micro_evidence_recall": {
+        "1": 0.7768595041322314,
+        "5": 0.977961432506887,
+        "10": 0.9958677685950413
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 376,
+      "gold_evidence_items": 726,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.9370711292253845,
+      "any_evidence_recall": {
+        "1": 0.9095744680851063,
+        "5": 0.9680851063829787,
+        "10": 0.9840425531914894
+      },
+      "full_evidence_recall": {
+        "1": 0.24202127659574468,
+        "5": 0.8776595744680851,
+        "10": 0.9069148936170213
+      },
+      "micro_evidence_recall": {
+        "1": 0.47107438016528924,
+        "5": 0.9214876033057852,
+        "10": 0.9435261707988981
+      }
+    },
+    "all_500_diagnostic_including_abstention": {
+      "final": {
+        "evaluated_queries": 400,
+        "gold_evidence_items": 778,
+        "retrieval_unit": "evidence_capsule",
+        "mrr": 0.9651319444444445,
+        "any_evidence_recall": {
+          "1": 0.945,
+          "5": 0.995,
+          "10": 1.0
+        },
+        "full_evidence_recall": {
+          "1": 0.6825,
+          "5": 0.965,
+          "10": 0.9925
+        },
+        "micro_evidence_recall": {
+          "1": 0.781491002570694,
+          "5": 0.9781491002570694,
+          "10": 0.9961439588688946
+        }
+      },
+      "strict": {
+        "evaluated_queries": 400,
+        "gold_evidence_items": 778,
+        "retrieval_unit": "evidence_capsule",
+        "mrr": 0.9370968614718614,
+        "any_evidence_recall": {
+          "1": 0.91,
+          "5": 0.9675,
+          "10": 0.985
+        },
+        "full_evidence_recall": {
+          "1": 0.2275,
+          "5": 0.865,
+          "10": 0.895
+        },
+        "micro_evidence_recall": {
+          "1": 0.46786632390745503,
+          "5": 0.9138817480719794,
+          "10": 0.9370179948586118
+        }
+      }
+    },
+    "by_question_type": {
+      "knowledge-update": {
+        "final": {
+          "evaluated_queries": 72,
+          "gold_evidence_items": 144,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9826388888888888,
+          "any_evidence_recall": {
+            "1": 0.9722222222222222,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.5277777777777778,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.75,
+            "5": 1.0,
+            "10": 1.0
+          }
+        },
+        "strict": {
+          "evaluated_queries": 72,
+          "gold_evidence_items": 144,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9861111111111112,
+          "any_evidence_recall": {
+            "1": 0.9722222222222222,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.9861111111111112,
+            "10": 0.9861111111111112
+          },
+          "micro_evidence_recall": {
+            "1": 0.4861111111111111,
+            "5": 0.9930555555555556,
+            "10": 0.9930555555555556
+          }
+        }
+      },
+      "multi-session": {
+        "final": {
+          "evaluated_queries": 91,
+          "gold_evidence_items": 216,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 1.0,
+          "any_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.8571428571428571,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.9398148148148148,
+            "5": 1.0,
+            "10": 1.0
+          }
+        },
+        "strict": {
+          "evaluated_queries": 91,
+          "gold_evidence_items": 216,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9671162171162171,
+          "any_evidence_recall": {
+            "1": 0.9560439560439561,
+            "5": 0.978021978021978,
+            "10": 0.989010989010989
+          },
+          "full_evidence_recall": {
+            "1": 0.0,
+            "5": 0.8461538461538461,
+            "10": 0.8571428571428571
+          },
+          "micro_evidence_recall": {
+            "1": 0.4027777777777778,
+            "5": 0.9259259259259259,
+            "10": 0.9351851851851852
+          }
+        }
+      },
+      "single-session-assistant": {
+        "final": {
+          "evaluated_queries": 56,
+          "gold_evidence_items": 56,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 1.0,
+          "any_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "micro_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          }
+        },
+        "strict": {
+          "evaluated_queries": 56,
+          "gold_evidence_items": 56,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 1.0,
+          "any_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "micro_evidence_recall": {
+            "1": 1.0,
+            "5": 1.0,
+            "10": 1.0
+          }
+        }
+      },
+      "single-session-preference": {
+        "final": {
+          "evaluated_queries": 30,
+          "gold_evidence_items": 30,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.8872222222222222,
+          "any_evidence_recall": {
+            "1": 0.8333333333333334,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.8333333333333334,
+            "5": 1.0,
+            "10": 1.0
+          },
+          "micro_evidence_recall": {
+            "1": 0.8333333333333334,
+            "5": 1.0,
+            "10": 1.0
+          }
+        },
+        "strict": {
+          "evaluated_queries": 30,
+          "gold_evidence_items": 30,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7573737373737374,
+          "any_evidence_recall": {
+            "1": 0.6666666666666666,
+            "5": 0.8666666666666667,
+            "10": 0.9333333333333333
+          },
+          "full_evidence_recall": {
+            "1": 0.6666666666666666,
+            "5": 0.8666666666666667,
+            "10": 0.9333333333333333
+          },
+          "micro_evidence_recall": {
+            "1": 0.6666666666666666,
+            "5": 0.8666666666666667,
+            "10": 0.9333333333333333
+          }
+        }
+      },
+      "temporal-reasoning": {
+        "final": {
+          "evaluated_queries": 127,
+          "gold_evidence_items": 280,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9266622922134734,
+          "any_evidence_recall": {
+            "1": 0.8818897637795275,
+            "5": 0.984251968503937,
+            "10": 1.0
+          },
+          "full_evidence_recall": {
+            "1": 0.47244094488188976,
+            "5": 0.8976377952755905,
+            "10": 0.9763779527559056
+          },
+          "micro_evidence_recall": {
+            "1": 0.6142857142857143,
+            "5": 0.9428571428571428,
+            "10": 0.9892857142857143
+          }
+        },
+        "strict": {
+          "evaluated_queries": 127,
+          "gold_evidence_items": 280,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9024406040154072,
+          "any_evidence_recall": {
+            "1": 0.8582677165354331,
+            "5": 0.952755905511811,
+            "10": 0.9763779527559056
+          },
+          "full_evidence_recall": {
+            "1": 0.11811023622047244,
+            "5": 0.7874015748031497,
+            "10": 0.8503937007874016
+          },
+          "micro_evidence_recall": {
+            "1": 0.3892857142857143,
+            "5": 0.8714285714285714,
+            "10": 0.9142857142857143
+          }
+        }
+      }
+    },
+    "mean_retrieved_characters_at_10": {
+      "final": 426434.81382978725,
+      "strict": 128375.33510638298
+    },
+    "data_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "gold_used_for_ranking": false,
+    "official_end_to_end_qa_run": false,
+    "runtime_seconds": 917.9900182999991
+  },
+  "metadata": {
+    "adapter": "UMD 3.34 post-dataset development replay: query fission and semantic periapsis",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "post_development_holdout": true,
+    "run_id": "rerun20260812_umd334holdout",
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 32768,
+      "cache_hits": 3673,
+      "cache_misses": 35349,
+      "neural_calls": 35349,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

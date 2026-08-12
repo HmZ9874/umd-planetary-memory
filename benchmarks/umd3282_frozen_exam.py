@@ -107,11 +107,15 @@ def _write_checkpoint(path: Path, value: dict[str, Any]) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def run_locomo(encoder: FastEmbedEncoder) -> dict[str, Any]:
+def run_locomo(
+    encoder: FastEmbedEncoder, *, checkpoint_name: str | None = None,
+) -> dict[str, Any]:
     started = time.perf_counter()
     path = DATA / "locomo10.json"
     dataset = json.loads(path.read_text(encoding="utf-8"))
-    checkpoint_path = RESULTS / "umd3282_exam_locomo_checkpoint.json"
+    checkpoint_path = RESULTS / (
+        checkpoint_name or "umd3282_exam_locomo_checkpoint.json"
+    )
     checkpoint = _checkpoint(checkpoint_path)
     for conversation_number, sample in enumerate(dataset, 1):
         key = str(conversation_number - 1)
@@ -214,17 +218,18 @@ def run_longmemeval(
     physics_v335: bool = False,
     physics_v336: bool = False,
     question_start: int = 0, question_limit: int | None = None,
+    checkpoint_name: str | None = None,
 ) -> dict[str, Any]:
     started = time.perf_counter()
     path = DATA / "longmemeval_s_cleaned.json"
     dataset = json.loads(path.read_text(encoding="utf-8"))
-    checkpoint_path = RESULTS / (
+    checkpoint_path = RESULTS / (checkpoint_name or (
         "umd336_longmemeval_checkpoint.json"
         if physics_v336 else "umd335_longmemeval_checkpoint.json"
         if physics_v335 else
         "umd334_longmemeval_checkpoint.json"
         if physics_v334 else "umd3282_exam_longmemeval_checkpoint.json"
-    )
+    ))
     checkpoint = _checkpoint(checkpoint_path)
     start = min(max(0, int(question_start)), len(dataset))
     stop = len(dataset) if question_limit is None else min(len(dataset), start + max(0, int(question_limit)))
@@ -359,10 +364,22 @@ def main() -> None:
     parser.add_argument("--question-start", type=int, default=0)
     parser.add_argument("--question-limit", type=int)
     parser.add_argument(
+        "--run-id",
+        help=(
+            "Use isolated checkpoint files prefixed by this identifier. "
+            "This prevents a rerun from silently reusing historical rankings."
+        ),
+    )
+    parser.add_argument(
         "--frozen-holdout", action="store_true",
         help="Mark a predeclared post-development slice as parameter-frozen.",
     )
     args = parser.parse_args()
+    if args.run_id and any(
+        not (character.isalnum() or character in "-_")
+        for character in args.run_id
+    ):
+        parser.error("--run-id may contain only letters, digits, '-' and '_'")
     if args.frozen_holdout and (
         not (args.physics_v334 or args.physics_v335 or args.physics_v336)
         or args.question_start < 100
@@ -372,20 +389,33 @@ def main() -> None:
         cache_dir=MODEL_CACHE, batch_size=128, cache_size=32768, threads=16,
     )
     if args.benchmark == "locomo":
-        result = run_locomo(encoder)
+        result = run_locomo(
+            encoder,
+            checkpoint_name=(
+                f"{args.run_id}_locomo_checkpoint.json" if args.run_id else None
+            ),
+        )
     elif args.benchmark == "longmemeval":
         result = run_longmemeval(
             encoder, physics_v334=args.physics_v334,
             physics_v335=args.physics_v335,
             physics_v336=args.physics_v336,
             question_start=args.question_start, question_limit=args.question_limit,
+            checkpoint_name=(
+                f"{args.run_id}_longmemeval_checkpoint.json"
+                if args.run_id else None
+            ),
         )
     elif args.benchmark == "membench":
         result = run_membench(encoder, args.membench_per_group)
     else:
         result = run_memora(
             encoder, 10, physics_v327=True, persona_start_per_period=0,
-            checkpoint_name="memora_umd3282_exam_v2_gold_blind_checkpoint.json",
+            checkpoint_name=(
+                f"{args.run_id}_memora_checkpoint.json"
+                if args.run_id
+                else "memora_umd3282_exam_v2_gold_blind_checkpoint.json"
+            ),
         )
     payload = {
         args.benchmark: result,
@@ -405,6 +435,7 @@ def main() -> None:
                 or bool(args.frozen_holdout)
             ),
             "post_development_holdout": bool(args.frozen_holdout),
+            "run_id": args.run_id,
             "paid_api_calls": 0,
             "official_answer_or_judge_model": None,
             "encoder": encoder.metadata(),

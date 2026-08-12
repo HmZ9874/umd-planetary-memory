@@ -33,6 +33,18 @@ FILES: dict[str, tuple[str, int]] = {
     "umd334_longmemeval_full_replay.json": ("longmemeval", 500),
     "umd335_longmemeval_full_regression.json": ("longmemeval", 500),
     "umd336_longmemeval_full_regression.json": ("longmemeval", 500),
+    "rerun_20260812_umd3282_longmemeval.json": ("longmemeval", 500),
+    "rerun_20260812_umd334_holdout.json": ("longmemeval", 400),
+    "rerun_20260812_umd335_longmemeval.json": ("longmemeval", 500),
+    "rerun_20260812_umd336_evermembench.json": ("evermembench", 3121),
+    "rerun_20260812_umd336_locomo.json": ("locomo", 1986),
+    "rerun_20260812_umd336_longmemeval.json": ("longmemeval", 500),
+    "rerun_20260812_umd336_longmemeval_v2.json": ("longmemeval_v2", 451),
+    "rerun_20260812_umd336_membench.json": ("membench", 550),
+    "rerun_20260812_umd336_memora.json": ("memora", 600),
+    "rerun_20260812_umd336_memoryagentbench.json": ("memoryagentbench", 2800),
+    "rerun_20260812_umd336_memoryarena.json": ("memoryarena", 4149),
+    "rerun_20260812_umd336_memorybench.json": ("memorybench", 51),
 }
 
 
