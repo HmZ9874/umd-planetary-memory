@@ -1,0 +1,194 @@
+{
+  "memoryagentbench": {
+    "benchmark": "MemoryAgentBench",
+    "umd_version": "3.33.1",
+    "status": "official_data_answer_bearing_retrieval_proxy",
+    "competencies_run": [
+      "Accurate Retrieval",
+      "Conflict Resolution"
+    ],
+    "competencies_not_scored": [
+      "Test-Time Learning",
+      "Long-Range Understanding"
+    ],
+    "chunk_chars": 1200,
+    "chunk_overlap": 200,
+    "max_chunks_per_context": null,
+    "contexts_total": 30,
+    "contexts_run": 30,
+    "contexts_skipped_for_capacity": 0,
+    "questions_skipped_for_capacity": 0,
+    "questions": 2800,
+    "answer_bearing_questions": 1152,
+    "by_competency": {
+      "Accurate_Retrieval": {
+        "questions": 2000,
+        "answer_bearing_questions": 352,
+        "no_answer_bearing_passage": 1648,
+        "chunks": 26971,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 352,
+          "gold_evidence_items": 19585,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7978298611111111,
+          "any_evidence_recall": {
+            "1": 0.7443181818181818,
+            "5": 0.8693181818181818,
+            "10": 0.9318181818181818
+          },
+          "full_evidence_recall": {
+            "1": 0.25,
+            "5": 0.3494318181818182,
+            "10": 0.4630681818181818
+          },
+          "micro_evidence_recall": {
+            "1": 0.10344651519019658,
+            "5": 0.11927495532295124,
+            "10": 0.1339290273168241
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 352,
+          "gold_evidence_items": 19585,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.5923864866984484,
+          "any_evidence_recall": {
+            "1": 0.48579545454545453,
+            "5": 0.71875,
+            "10": 0.78125
+          },
+          "full_evidence_recall": {
+            "1": 0.12215909090909091,
+            "5": 0.2471590909090909,
+            "10": 0.29829545454545453
+          },
+          "micro_evidence_recall": {
+            "1": 0.008731171815164666,
+            "5": 0.020679091141179475,
+            "10": 0.02833801378606076
+          }
+        }
+      },
+      "Conflict_Resolution": {
+        "questions": 800,
+        "answer_bearing_questions": 800,
+        "no_answer_bearing_passage": 0,
+        "chunks": 3114,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 800,
+          "gold_evidence_items": 26648,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9416195436507937,
+          "any_evidence_recall": {
+            "1": 0.9225,
+            "5": 0.97,
+            "10": 0.9875
+          },
+          "full_evidence_recall": {
+            "1": 0.24,
+            "5": 0.465,
+            "10": 0.92125
+          },
+          "micro_evidence_recall": {
+            "1": 0.10391023716601622,
+            "5": 0.39124887421194837,
+            "10": 0.7010657460222155
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 800,
+          "gold_evidence_items": 26648,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9069979086306895,
+          "any_evidence_recall": {
+            "1": 0.88625,
+            "5": 0.93125,
+            "10": 0.94875
+          },
+          "full_evidence_recall": {
+            "1": 0.1875,
+            "5": 0.49625,
+            "10": 0.6175
+          },
+          "micro_evidence_recall": {
+            "1": 0.0266061242870009,
+            "5": 0.09685529870909637,
+            "10": 0.1521314920444311
+          }
+        }
+      }
+    },
+    "final_capsule_retrieval": {
+      "evaluated_queries": 1152,
+      "gold_evidence_items": 46233,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8976838073192239,
+      "any_evidence_recall": {
+        "1": 0.8680555555555556,
+        "5": 0.9392361111111112,
+        "10": 0.9704861111111112
+      },
+      "full_evidence_recall": {
+        "1": 0.24305555555555555,
+        "5": 0.4296875,
+        "10": 0.78125
+      },
+      "micro_evidence_recall": {
+        "1": 0.1037137975039474,
+        "5": 0.2760365972357407,
+        "10": 0.46081803041117814
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 1152,
+      "gold_evidence_items": 46233,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8108666408180603,
+      "any_evidence_recall": {
+        "1": 0.7638888888888888,
+        "5": 0.8663194444444444,
+        "10": 0.8975694444444444
+      },
+      "full_evidence_recall": {
+        "1": 0.1675347222222222,
+        "5": 0.4201388888888889,
+        "10": 0.5199652777777778
+      },
+      "micro_evidence_recall": {
+        "1": 0.019034023316678562,
+        "5": 0.06458590184500249,
+        "10": 0.09969069712110397
+      }
+    },
+    "official_end_to_end_accuracy_run": false,
+    "gold_used_for_ranking": false,
+    "data_sha256": {
+      "Accurate_Retrieval": "56c3cd80fb6731a3e53cd1a6be3148f54df60ff2d290ee50e28f8acebf9655c1",
+      "Conflict_Resolution": "24d5c3f09ce0ce15625cb9f8a98f44f0d864ca6c94d7b4ad04eb697ca3a5ff45"
+    },
+    "runtime_seconds": 1301.1,
+    "runtime_seconds_last_resume": 100.857839100001,
+    "runtime_note": "Approximate total wall clock across the initial 1200-second checkpointed segment and the final resume; the last-resume duration alone is not a full-run runtime."
+  },
+  "metadata": {
+    "adapter": "UMD 3.33.1 binary document stars and absorbing relation boundary / UMD 3.32.1 relation superposition and version shadows / UMD 3.31 evidence closure / UMD 3.30 slingshot / UMD 3.28.2 conserved control laws",
+    "full_run": true,
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 2041,
+      "cache_hits": 1082,
+      "cache_misses": 2041,
+      "neural_calls": 2041,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

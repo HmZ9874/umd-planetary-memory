@@ -43,24 +43,21 @@ The LLM extractor is optional. Its security tests use a fake adapter and do not 
 
 ```bash
 python -m pytest -q \
-  benchmarks/umd316_adapter_test.py \
-  benchmarks/umd317_adapter_test.py \
-  benchmarks/umd318_adapter_test.py \
-  benchmarks/umd325_adapter_test.py \
-  benchmarks/umd326_adapter_test.py \
-  benchmarks/umd327_adapter_test.py \
-  benchmarks/umd329_performance_test.py \
-  benchmarks/umd330_adapter_test.py \
-  benchmarks/umd39_benchmarks_test.py
+  --ignore=benchmarks/vendor \
+  --ignore=benchmarks/vendor_exam \
+  --ignore=benchmarks/data \
+  --ignore=benchmarks/data_exam
 ```
 
-Expected release result: `72 passed`.
+Expected release result: `126 passed`.
 
 Validate the published result manifests:
 
 ```bash
 python scripts/verify_published_results.py
 ```
+
+Expected manifest result: `validated_results=16 formula_relations=46 gold_used_for_ranking=false status=pass`.
 
 ## Benchmark data layout / Benchmark 数据目录
 
@@ -98,16 +95,36 @@ The formal snapshot used SHA-256:
 - LoCoMo: `79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4`
 - LongMemEval_S cleaned: `d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442`
 
-## UMD 3.30 MemoryAgentBench / UMD 3.30 全量测试
+## UMD 3.30–3.33.1 MemoryAgentBench / UMD 3.30–3.33.1 测试
 
 ```bash
 python -m benchmarks.umd3282_continued_exam \
   --benchmark memoryagentbench \
   --full \
   --output benchmarks/results/local_umd330_memoryagentbench.json
+
+python -m benchmarks.umd3282_continued_exam \
+  --benchmark memoryagentbench \
+  --full \
+  --physics-v331 \
+  --output benchmarks/results/local_umd331_memoryagentbench.json
+
+python -m benchmarks.umd3282_continued_exam \
+  --benchmark memoryagentbench \
+  --full \
+  --physics-v332 \
+  --output benchmarks/results/local_umd3321_memoryagentbench.json
+
+python -m benchmarks.umd3282_continued_exam \
+  --benchmark memoryagentbench \
+  --full \
+  --physics-v333 \
+  --output benchmarks/results/local_umd3331_memoryagentbench.json
 ```
 
 The runner writes a versioned local checkpoint after every context. Checkpoints are ignored and must not be presented as final results. Formal ranking always occurs before answer inspection.
+
+For a same-capacity A/B, omit `--full` in all compared commands. This applies the same frozen 600-chunk limit; never compare a capacity result with a full result. / 同容量 A/B 应在所有对比命令中省略 `--full`，统一使用 600-chunk 上限；容量档不能与全量档直接比较。
 
 ## How metrics are computed / 指标计算
 
@@ -136,4 +153,3 @@ For each question:
 4. report final capsule and strict atomic channels together;
 5. state whether the number is development, held-out, full, sampled, proxy or official;
 6. run `scripts/verify_published_results.py` and the release test suite.
-

@@ -45,7 +45,8 @@ def _sha256(path: Path) -> str:
 def _index(
     texts: Sequence[str], groups: Sequence[int], source_ids: Sequence[str],
     encoder: FastEmbedEncoder, dates: Sequence[str] | None = None,
-    *, physics_v330: bool = False,
+    *, physics_v330: bool = False, physics_v331: bool = False,
+    physics_v332: bool = False, physics_v333: bool = False,
 ) -> OrbitIndex:
     return OrbitIndex(
         texts, groups, source_ids, encoder, dates,
@@ -55,7 +56,10 @@ def _index(
         physics_v325=True,
         physics_v326=True,
         physics_v327=True,
-        physics_v330=physics_v330,
+        physics_v330=physics_v330 or physics_v331 or physics_v332 or physics_v333,
+        physics_v331=physics_v331 or physics_v332 or physics_v333,
+        physics_v332=physics_v332 or physics_v333,
+        physics_v333=physics_v333,
         first_orbit_v316=False,
     )
 

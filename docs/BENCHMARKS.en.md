@@ -10,6 +10,8 @@ Final means provenance-capsule retrieval. Strict means one immutable source per 
 
 Snapshot date: 2026-08-11.
 
+The table standardizes reporting fields, not task difficulty; raw scores from different benchmarks are not a common Elo ranking.
+
 | Benchmark | Evaluated scope | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
@@ -18,7 +20,7 @@ Snapshot date: 2026-08-11.
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
 | MemoryArena reuse | 1,714 | 0.9994 | 1.0000 | 1.0000 | 0.9708 | 1.0000 | 1.0000 |
-| MemoryAgentBench UMD 3.30 | 1,152 | 0.6727 | 0.9271 | 0.5712 | 0.5556 | 0.7812 | 0.2595 |
+| MemoryAgentBench UMD 3.33.1 | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
 | LongMemEval-V2 small | 230 | 0.9304 | 0.9870 | 0.5565 | 0.7652 | 0.9087 | 0.1174 |
 | EverMemBench-Dynamic | 202 | 0.8465 | 0.9802 | 0.4604 | 0.4406 | 0.9010 | 0.2327 |
 
@@ -37,6 +39,32 @@ MemoryAgentBench uses all 30 selected contexts and 2,800 questions; 1,152 questi
 | Strict Full R@10 | 0.1484 | 0.2595 | +0.1111 |
 
 Accurate Retrieval is unchanged metric-for-metric. The improvement comes from multi-hop and version-conflict cases in Conflict Resolution.
+
+## 3.1 UMD 3.30 → 3.31 evidence closure
+
+| Metric | UMD 3.30 | UMD 3.31 | Absolute delta |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.6727 | 0.7352 | +0.0625 |
+| Final Full R@10 | 0.5712 | 0.6189 | +0.0477 |
+| Strict Any R@1 | 0.5556 | 0.6398 | +0.0842 |
+| Strict Full R@10 | 0.2595 | **0.4141** | **+0.1545** |
+
+Strict Full R@10 improves by `59.5%` relative. Accurate Retrieval is unchanged; Conflict Resolution Strict Full R@10 rises from `0.2737` to `0.4963`. Full runtime increases by `6.5%`.
+
+## 3.2 UMD 3.31 → 3.32.1 relation superposition
+
+| Metric | UMD 3.31 | UMD 3.32.1 | Absolute delta |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.7352 | **0.8281** | **+0.0929** |
+| Final Full R@10 | 0.6189 | **0.7526** | **+0.1337** |
+| Strict Any R@1 | 0.6398 | **0.7378** | **+0.0981** |
+| Strict Full R@10 | 0.4141 | **0.5095** | **+0.0955** |
+
+The same-capacity 600-chunk run reaches `0.9370 / 0.9701 / 0.9104 / 0.7065`, but does not replace full-run scores. Strict can return only one source per rank, giving a raw full-dataset Strict Full R@10 ceiling of `794/1152 = 0.6892`; all four raw metrics cannot simultaneously reach 0.99 under the current definitions. On the 600-question Conflict Resolution capacity subset, ceiling-normalized Strict Full R@10 is `0.7050 / 0.7450 = 0.9463`. See `benchmarks/results/UMD3321_RELATION_SUPERPOSITION_REPORT.md`.
+
+## 3.3 UMD 3.32.1 → 3.33.1 binary document stars
+
+The four core metrics rise from `0.8281 / 0.7526 / 0.7378 / 0.5095` to `0.8681 / 0.7813 / 0.7639 / 0.5200`. The subset-budget Final Full R@10 implementation ceiling is about `0.9531`, of which the result reaches `81.97%`; Strict Full reaches `75.44%` of its fixed ceiling. See `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`.
 
 ## 4. Scope and bias
 
@@ -72,4 +100,3 @@ Upstream examples:
 - a seven-day real-user failure/cost/quality-drift report;
 - peer-review acceptance;
 - production security certification.
-

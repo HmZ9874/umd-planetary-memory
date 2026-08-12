@@ -46,6 +46,9 @@ benchmarks/results/*
 !benchmarks/results/UMD329_COMPLETION_TEST_REPORT.md
 !benchmarks/results/UMD329_PERFORMANCE_REPORT.md
 !benchmarks/results/UMD330_SLINGSHOT_OPTIMIZATION_REPORT.md
+!benchmarks/results/UMD331_EVIDENCE_CLOSURE_REPORT.md
+!benchmarks/results/UMD3321_RELATION_SUPERPOSITION_REPORT.md
+!benchmarks/results/UMD3331_BINARY_STAR_REPORT.md
 !benchmarks/results/umd3282_exam_locomo.json
 !benchmarks/results/umd3282_exam_longmemeval.json
 !benchmarks/results/umd3282_exam_membench.json
@@ -57,10 +60,15 @@ benchmarks/results/*
 !benchmarks/results/umd329_exam_longmemeval_v2_full.json
 !benchmarks/results/umd329_exam_memoryagentbench_full.json
 !benchmarks/results/umd330_exam_memoryagentbench_full.json
+!benchmarks/results/umd330_exam_memoryagentbench_capacity_600.json
+!benchmarks/results/umd331_exam_memoryagentbench_capacity.json
+!benchmarks/results/umd331_exam_memoryagentbench_full.json
+!benchmarks/results/umd3321_exam_memoryagentbench_capacity.json
+!benchmarks/results/umd3321_exam_memoryagentbench_full.json
+!benchmarks/results/umd3331_exam_memoryagentbench_full.json
 
 # Frontend/build output
 node_modules/
 dist/
 build/
 coverage/
-

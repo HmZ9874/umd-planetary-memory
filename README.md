@@ -10,11 +10,11 @@
 
 | Published on this README / 已在首页公开 | Count / 数量 |
 |---|---:|
-| Independent mathematical relations / 独立数学关系 | **28** |
-| Core algorithm formula families / 核心算法公式族 | **9** |
+| Independent mathematical relations / 独立数学关系 | **46** |
+| Core algorithm formula families / 核心算法公式族 | **12** |
 | Evaluation metric formulas / 评估指标公式 | **4** |
 
-Every relation has a stable identifier from `UMD-F001` to `UMD-F028`. The first 24 relations form nine algorithm families; the last four define evaluation. The complete bilingual registry appears below. / 每条关系都有 `UMD-F001` 至 `UMD-F028` 的稳定编号；前 24 条组成九个算法公式族，最后四条定义评估指标。完整中英文注册表见下文。
+Every relation has a stable identifier from `UMD-F001` to `UMD-F046`. Algorithm relations are `F001–F028` and `F033–F046`; `F029–F032` preserve the four evaluation definitions. / 每条关系都有 `UMD-F001` 至 `UMD-F046` 的稳定编号；算法关系为 `F001–F028` 与 `F033–F046`，`F029–F032` 保留四个评估定义。
 
 ---
 
@@ -22,7 +22,7 @@ Every relation has a stable identifier from `UMD-F001` to `UMD-F028`. The first 
 
 ## 1. 项目状态与诚实声明
 
-当前公开版本是 **UMD 3.30**。仓库公开算法源码、公式、工程推导、参数、确定性测试、对抗测试、冻结协议、正式结果 JSON、Python/TypeScript SDK 原型和观察台原型。
+当前开发版本是 **UMD 3.33.1**。仓库公开算法源码、公式、工程推导、参数、确定性测试、对抗测试、冻结协议、正式结果 JSON、Python/TypeScript SDK 原型和观察台原型。
 
 这里的“公开计算推理”是指：可验证的设计依据、输入变量、公式、约束、数值算例、消融结果和失败分析。它不包含任何模型供应商的私有隐藏思维链。
 
@@ -129,10 +129,13 @@ flowchart LR
 | 3.28/3.28.2 | 多轨检索、正式冻结考试与持续优化 | `benchmarks/umd3282_*` |
 | 3.29 | 增量边际覆盖、查询不变量和共享状态缓存，保持排序等价 | `benchmarks/umd329_performance_test.py` |
 | 3.30 | 版本化事实图、三跳引力弹弓、回声小行星带 | `benchmarks/umd330_adapter.py` |
+| 3.31 | 输出槽引力、四跳证据闭包、依赖来源轨道、严格原子闭包排序 | `benchmarks/umd331_adapter.py` |
+| 3.32.1 | 关系叠加、五跳覆盖坍缩、答案路径共识、版本影子轨道、严格原子列展开 | `benchmarks/umd332_adapter.py` |
+| 3.33.1 | 重叠重建、双文档恒星、置信门、终点吸收边界与循环能量 | `benchmarks/umd333_adapter.py` |
 
-### 5.0 中文公式注册表：28 个独立关系
+### 5.0 中文公式注册表：46 个独立关系
 
-下面的“关系”包括评分方程、集合关系、分段状态函数、版本选择规则和指标定义。它们按九个核心算法族组织；同一公式在后文出现的数值展开不重复计数。
+下面的“关系”包括评分方程、集合关系、分段状态函数、版本选择规则和指标定义。36 个算法关系按十一个核心算法族组织，另保留四个评估指标；同一公式在后文出现的数值展开不重复计数。
 
 #### 公式族 1：归一化与排名融合（3 条）
 
@@ -185,14 +188,41 @@ flowchart LR
 23. **UMD-F023 — 多跳路径能量**：`Energy(path) = Σ[0.20 + min(3, contact(q,r)/5)] + 6 × I[last_relation ∈ target(q)]`。最多三跳，强奖励命中目标关系的终点路径。
 24. **UMD-F024 — 回声集合**：`Echo(a) = {i | casefold(a) 是 casefold(text_i) 的子串}`。使用系统预测对象而非 gold 标签追加最多 96 个证据来源。
 
+#### 公式族 10：输出槽与证据闭包（4 条）
+
+25. **UMD-F025 — 输出槽关系质量**：`Ω(r|q) = 1 − 0.08 × position(r)`，若只命中旧版回退线索则为 `0.50`。优先解析问题要求输出的最终关系，而不是误把中间实体关系当成终点。
+26. **UMD-F026 — 四跳闭包路径能量**：`E₃.₃₁(p|q) = Σ[0.20 + min(3, contact(q,r)/5)] + 8 + Ω(r_last|q)`，仅对 `r_last ∈ output_slot(q)` 的路径成立，且 `|p| ≤ 4`。更强的终点势垒和额外一跳用于依赖链重建。
+27. **UMD-F027 — 证据闭包轨道**：`Closure(a,p,t) = Primary(a) ∪ Echo(a,t) ∪ ⋃_{e∈p\{e_answer}} provenance(e)`。同时保存答案事实、答案回声和推理路径依赖来源。
+28. **UMD-F028 — 严格原子闭包顺序**：`Strict₃.₃₁ = unique(Primary ⧺ Echo ⧺ Dependency ⧺ Strict₃.₃₀)`。每个名次仍严格只含一个来源；优化只改变来源顺序，不靠扩大胶囊宽度提高分数。
+
 #### 四个评估指标公式（4 条）
 
-25. **UMD-F025 — Any Recall**：`Any R@k = mean(I[Y ∩ R_k ≠ ∅])`。至少找回一个 gold 来源的问题比例。
-26. **UMD-F026 — Full Recall**：`Full R@k = mean(I[Y ⊆ R_k])`。完整找回全部 gold 来源的问题比例。
-27. **UMD-F027 — Micro Recall**：`Micro R@k = Σ|Y ∩ R_k| / Σ|Y|`。跨问题按来源数量加权的总体召回。
-28. **UMD-F028 — MRR**：`MRR = mean(1 / rank(first gold retrieval unit))`。第一个 gold 检索单元倒数名次的平均值。
+29. **UMD-F029 — Any Recall**：`Any R@k = mean(I[Y ∩ R_k ≠ ∅])`。至少找回一个 gold 来源的问题比例。
+30. **UMD-F030 — Full Recall**：`Full R@k = mean(I[Y ⊆ R_k])`。完整找回全部 gold 来源的问题比例。
+31. **UMD-F031 — Micro Recall**：`Micro R@k = Σ|Y ∩ R_k| / Σ|Y|`。跨问题按来源数量加权的总体召回。
+32. **UMD-F032 — MRR**：`MRR = mean(1 / rank(first gold retrieval unit))`。第一个 gold 检索单元倒数名次的平均值。
 
-计数校验：`3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 = 24` 个算法关系；`24 + 4 = 28` 个独立数学关系。
+#### 公式族 11：关系叠加与版本影子（8 条）
+
+33. **UMD-F033 — 终点关系叠加**：`ΩΣ(r|q) = max(Ω_head(r|q), Ω_slot(r|q), Ω_cue(r|q))`。同时保留答案头、输出槽和显式关系线索，不再让先命中的单一规则遮蔽其余终点。
+34. **UMD-F034 — 边真空能**：`ε(e|q) = 0.20 + min(3, contact(q,r_e)/5)`（关系受查询支持），否则 `−0.18`。负真空能允许跨过必要的隐含中间边，又抑制无关长路径。
+35. **UMD-F035 — 五跳覆盖坍缩**：`E₃.₃₂(p|q) = Σ_{e∈p} ε(e|q) + 8 + 1.35ΩΣ(r_last|q) + 1.10|R(p)∩R(q)|/max(1,|R(q)|)`，其中 `|p| ≤ 5`。终点关系、查询关系覆盖和路径长度共同决定坍缩能量。
+36. **UMD-F036 — 答案路径共识**：`Consensus(a) = max_{p→a} E₃.₃₂(p|q) + min(0.45, 0.08(N_a−1))`。多条独立路径指向同一预测对象时提供有界加成，避免路径数量无限放大分数。
+37. **UMD-F037 — 同序完整性选择**：`e*(s,r) = argmax_e (ordinal(e), |normalize(object_e)|, |provenance(e)|, object_e)`。当同一 `(subject, relation, ordinal)` 出现碎片和完整对象时，确定性选择信息更完整的边。
+38. **UMD-F038 — 版本影子轨道**：`Shadow(a,s,r) = ⋃_{e_old∈History(s,r)} [Echo(object(e_old)) ∪ provenance(e_old)]`。当前答案回声之后再携带旧版本证据，使“现值”和“演变”都可审计，且不让旧值占据首位。
+39. **UMD-F039 — 自适应闭包视界**：`B_closure = min(256, |Echo ∪ Shadow ∪ Dependency|)`。把 Final 卫星闭包限制在 256 个来源内；容量增大是显式预算，不伪装成排名质量。
+40. **UMD-F040 — 严格原子列展开**：`Strict₃.₃₂ = unique(Primary ⧺ Echo ⧺ Shadow ⧺ Dependency ⧺ Col(Result))`，其中 `Col` 先枚举所有胶囊的第 1 个来源，再枚举第 2 个来源，以此类推。每个 Strict 名次仍只包含一个来源。
+
+#### 公式族 12：文档恒星与吸收边界（6 条）
+
+41. **UMD-F041 — 重叠窗口重建**：`O* = mode{max_o suffix(W_i,o)=prefix(W_{i+1},o)}`，并要求至少 75% 相邻窗口共享 `O*`。只在规则重叠流中无损重建长文本。
+42. **UMD-F042 — 文档恒星卫星集**：`Moon(D_j) = {i | span(W_i) ∩ span(D_j) ≠ ∅}`。完整 `Document N:` 文档作为恒星，覆盖它的不可变窗口作为来源卫星。
+43. **UMD-F043 — 双恒星焦点守恒**：`Final₁³·³³ = Final₁³·³² ∪ Moon(D_(1)) ∪ Moon(D_(2))`。保留旧首胶囊全部来源，并追加前两篇文档的少量卫星。
+44. **UMD-F044 — 严格恒星置信门**：`PromoteStrict = I[score(D₁)/max(ε,score(D₂)) ≥ 1.13]`。只有文档首位具有稳定间隔时才提升其内部最强单来源。
+45. **UMD-F045 — 完整终点吸收**：`Stop(p,q)=I[R_terminal(q) ⊆ R(p) ∧ r_last∈R_terminal(q)]`。路径覆盖全部查询终点关系后立即停止扩展，防止越过正确答案。
+46. **UMD-F046 — 循环与重复关系能量**：`E_absorb(p)=E₃.₃₂(p)−1.25Σ_r max(0,count_p(r)−1)`，且若下一对象已在路径实体集中则拒绝该边。
+
+计数校验：`3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 + 4 + 8 + 6 = 42` 个算法关系；`42 + 4 = 46` 个独立数学关系。
 
 ### 5.1 词法、层级与归一化
 
@@ -368,6 +398,8 @@ UMD 3.29 不改变公式，只增量维护重叠质量：
 
 快照日期：**2026-08-11**。
 
+下表统一展示检索口径，但不同 benchmark 的任务、gold 标注、干扰密度和可评估范围不同，raw score 不能当作统一 Elo 排名。
+
 | 基准 | 可评估范围 | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
@@ -376,7 +408,7 @@ UMD 3.29 不改变公式，只增量维护重叠质量：
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
 | MemoryArena reuse | 1,714 | 0.9994 | 1.0000 | 1.0000 | 0.9708 | 1.0000 | 1.0000 |
-| MemoryAgentBench UMD 3.30 | 1,152 | 0.6727 | 0.9271 | 0.5712 | 0.5556 | 0.7812 | 0.2595 |
+| MemoryAgentBench UMD 3.33.1 | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
 | LongMemEval-V2 small | 230 | 0.9304 | 0.9870 | 0.5565 | 0.7652 | 0.9087 | 0.1174 |
 | EverMemBench-Dynamic | 202 | 0.8465 | 0.9802 | 0.4604 | 0.4406 | 0.9010 | 0.2327 |
 
@@ -395,6 +427,47 @@ MemoryAgentBench 使用 30/30 上下文、2,800 个问题，其中 1,152 个问�
 | Strict Full R@10 | 0.1484 | 0.2595 | +0.1111 |
 
 Accurate Retrieval 子集逐项不变；提升来自 Conflict Resolution 的多跳与冲突事实。图功能带来约 `17.7%` 运行时增加。最大已测结构化上下文包含 1,119 chunks、17,831 facts；事实图稳定 Python 内存 `5.92 MiB`，构建峰值 `15.03 MiB`，构建时间 `0.652 s`。
+
+### UMD 3.30 → 3.31 证据闭包消融
+
+同一 30/30 上下文与 1,152 个可评估问题：
+
+| 指标 | 3.30 | 3.31 | 绝对变化 |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.6727 | 0.7352 | +0.0625 |
+| Final Any R@10 | 0.9271 | 0.9306 | +0.0035 |
+| Final Full R@10 | 0.5712 | 0.6189 | +0.0477 |
+| Strict Any R@1 | 0.5556 | 0.6398 | +0.0842 |
+| Strict Any R@10 | 0.7812 | 0.8290 | +0.0477 |
+| Strict Full R@10 | 0.2595 | **0.4141** | **+0.1545** |
+
+Strict Full R@10 相对提升 `59.5%`。Accurate Retrieval 不变；Conflict Resolution 的 Strict Full R@10 从 `0.2737` 提升到 `0.4963`。全量运行时间增加 `6.5%`。详见 `benchmarks/results/UMD331_EVIDENCE_CLOSURE_REPORT.md`。
+
+### UMD 3.31 → 3.32.1 关系叠加消融
+
+同一 30/30 上下文、同一冻结切块与 1,152 个可评估问题，排序阶段仍不读取 gold：
+
+| 指标 | 3.31 | 3.32.1 | 绝对变化 |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.7352 | **0.8281** | **+0.0929** |
+| Final Any R@10 | 0.9306 | **0.9653** | **+0.0347** |
+| Final Full R@10 | 0.6189 | **0.7526** | **+0.1337** |
+| Strict Any R@1 | 0.6398 | **0.7378** | **+0.0981** |
+| Strict Any R@10 | 0.8290 | **0.8880** | **+0.0590** |
+| Strict Full R@10 | 0.4141 | **0.5095** | **+0.0955** |
+
+600-chunk 同容量档（603 个可评估问题）达到 Final Any R@1 `0.9370`、Final Full R@10 `0.9701`、Strict Any R@1 `0.9104`、Strict Full R@10 `0.7065`。但这些容量档数字不能替代全量分数。更重要的是，Strict 每个名次只能携带一个来源；在 1,152 题中只有 794 题的 gold 来源数不超过 10，因此 raw Strict Full R@10 的数据集上限是 `794/1152 = 0.6892`，`0.99` 在该指标定义下数学上不可达。在容量档的 600 题 Conflict Resolution 子集上，raw Strict Full R@10 为 `0.7050`，可达上限为 `0.7450`，上限归一化结果为 `0.9463`。完整结果、失败实验与完整性说明见 `benchmarks/results/UMD3321_RELATION_SUPERPOSITION_REPORT.md`。
+
+### UMD 3.32.1 → 3.33.1 双文档恒星消融
+
+| 指标 | 3.32.1 | 3.33.1 | 绝对变化 |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.8281 | **0.8681** | **+0.0399** |
+| Final Full R@10 | 0.7526 | **0.7813** | **+0.0286** |
+| Strict Any R@1 | 0.7378 | **0.7639** | **+0.0260** |
+| Strict Full R@10 | 0.5095 | **0.5200** | **+0.0104** |
+
+按普通文档路径 88 来源、结构化闭包路径 296 来源的实际预算，Final Full R@10 的 size-only 实现上限约为 `0.9531`，当前达到其 `81.97%`；Strict Full 的 `0.5200` 达到固定上限 `0.6892` 的 `75.44%`。检查点全量墙钟约 `1301.1 s`，比 3.32.1 的同机观测多约 `38%`。详见 `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`。
 
 ### 测试范围边界
 
@@ -442,19 +515,14 @@ python -m venv .venv
 # Linux/macOS: source .venv/bin/activate
 python -m pip install -r requirements-dev.txt
 python -m pytest -q \
-  benchmarks/umd316_adapter_test.py \
-  benchmarks/umd317_adapter_test.py \
-  benchmarks/umd318_adapter_test.py \
-  benchmarks/umd325_adapter_test.py \
-  benchmarks/umd326_adapter_test.py \
-  benchmarks/umd327_adapter_test.py \
-  benchmarks/umd329_performance_test.py \
-  benchmarks/umd330_adapter_test.py \
-  benchmarks/umd39_benchmarks_test.py
+  --ignore=benchmarks/vendor \
+  --ignore=benchmarks/vendor_exam \
+  --ignore=benchmarks/data \
+  --ignore=benchmarks/data_exam
 python scripts/verify_published_results.py
 ```
 
-预期：`72 passed`，以及 `validated_results=10 gold_used_for_ranking=false status=pass`。GitHub Actions 在 Python 3.12/Linux 上执行相同验证。
+当前快照预期：`126 passed`，以及 `validated_results=16 formula_relations=46 gold_used_for_ranking=false status=pass`。GitHub Actions 在 Python 3.12/Linux 上执行相同验证。
 
 第三方 benchmark 原始数据不随仓库分发。数据布局、命令、SHA-256 与复现差异见 [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)。正式 JSON 位于 [`benchmarks/results/`](benchmarks/results/)，更细的中英文材料保留在 [`docs/`](docs/)。
 
@@ -478,7 +546,7 @@ python scripts/verify_published_results.py
 
 ## 1. Status and integrity statement
 
-The current public release is **UMD 3.30**. The repository publishes the algorithm lineage, equations, engineering derivations, parameters, deterministic and adversarial tests, frozen protocols, formal result JSON, Python/TypeScript SDK prototypes, and an observatory console prototype.
+The current development release is **UMD 3.33.1**. The repository publishes the algorithm lineage, equations, engineering derivations, parameters, deterministic and adversarial tests, frozen protocols, formal result JSON, Python/TypeScript SDK prototypes, and an observatory console prototype.
 
 “Published reasoning” here means auditable design rationale, variables, equations, constraints, worked calculations, ablations, and failure analysis. It does not mean private hidden chain-of-thought from any model provider.
 
@@ -565,10 +633,13 @@ Forgetting therefore updates state, versioned edges, indexes, caches, WAL, answe
 | 3.28/3.28.2 | multi-orbit retrieval and frozen formal exam | `benchmarks/umd3282_*` |
 | 3.29 | incremental marginal coverage and shared query-state caches with rank equivalence | `benchmarks/umd329_performance_test.py` |
 | 3.30 | versioned fact graph, three-hop slingshot, echo asteroid belt | `benchmarks/umd330_adapter.py` |
+| 3.31 | output-slot gravity, four-hop evidence closure, dependency provenance orbit, strict atomic closure ordering | `benchmarks/umd331_adapter.py` |
+| 3.32.1 | relation superposition, five-hop coverage collapse, answer-path consensus, version shadows, strict atomic column unfolding | `benchmarks/umd332_adapter.py` |
+| 3.33.1 | overlap reconstruction, binary document stars, confidence gate, terminal absorption and cycle energy | `benchmarks/umd333_adapter.py` |
 
-### 5.0 English formula registry: 28 independent relations
+### 5.0 English formula registry: 46 independent relations
 
-“Relation” includes scoring equations, set relations, piecewise state functions, version-selection rules, and metric definitions. The first 24 relations form nine core algorithm families; worked numeric expansions later in the README are not counted again.
+“Relation” includes scoring equations, set relations, piecewise state functions, version-selection rules, and metric definitions. Thirty-six algorithm relations form eleven core families, with four evaluation metrics retained separately; worked numeric expansions later in the README are not counted again.
 
 #### Family 1: normalization and rank fusion (3)
 
@@ -621,14 +692,41 @@ Forgetting therefore updates state, versioned edges, indexes, caches, WAL, answe
 23. **UMD-F023 — Multi-hop path energy**: `Energy(path) = Σ[0.20 + min(3, contact(q,r)/5)] + 6 × I[last_relation ∈ target(q)]`. Traverses at most three hops and strongly rewards a terminal target-relation match.
 24. **UMD-F024 — Echo set**: `Echo(a) = {i | casefold(a) is a substring of casefold(text_i)}`. Uses the system-predicted object, never gold labels, to append at most 96 evidence sources.
 
+#### Family 10: output slot and evidence closure (4)
+
+25. **UMD-F025 — Output-slot relation mass**: `Ω(r|q) = 1 − 0.08 × position(r)`, or `0.50` for a legacy fallback cue. It resolves the relation requested by the answer slot instead of mistaking an intermediate entity relation for the endpoint.
+26. **UMD-F026 — Four-hop closure path energy**: `E₃.₃₁(p|q) = Σ[0.20 + min(3, contact(q,r)/5)] + 8 + Ω(r_last|q)` for `r_last ∈ output_slot(q)` and `|p| ≤ 4`. A stronger terminal barrier and one extra hop reconstruct longer dependency chains.
+27. **UMD-F027 — Evidence-closure orbit**: `Closure(a,p,t) = Primary(a) ∪ Echo(a,t) ∪ ⋃_{e∈p\{e_answer}} provenance(e)`. Preserves the answer fact, answer echoes, and the provenance of all path dependencies.
+28. **UMD-F028 — Strict atomic closure order**: `Strict₃.₃₁ = unique(Primary ⧺ Echo ⧺ Dependency ⧺ Strict₃.₃₀)`. Every rank remains exactly one source; the gain comes from ordering, not wider capsules.
+
 #### Four evaluation metric formulas (4)
 
-25. **UMD-F025 — Any Recall**: `Any R@k = mean(I[Y ∩ R_k ≠ ∅])`. Fraction of questions retrieving at least one gold source.
-26. **UMD-F026 — Full Recall**: `Full R@k = mean(I[Y ⊆ R_k])`. Fraction of questions retrieving the complete gold source set.
-27. **UMD-F027 — Micro Recall**: `Micro R@k = Σ|Y ∩ R_k| / Σ|Y|`. Source-count-weighted recall across questions.
-28. **UMD-F028 — MRR**: `MRR = mean(1 / rank(first gold retrieval unit))`. Mean reciprocal rank of the first gold-bearing retrieval unit.
+29. **UMD-F029 — Any Recall**: `Any R@k = mean(I[Y ∩ R_k ≠ ∅])`. Fraction of questions retrieving at least one gold source.
+30. **UMD-F030 — Full Recall**: `Full R@k = mean(I[Y ⊆ R_k])`. Fraction of questions retrieving the complete gold source set.
+31. **UMD-F031 — Micro Recall**: `Micro R@k = Σ|Y ∩ R_k| / Σ|Y|`. Source-count-weighted recall across questions.
+32. **UMD-F032 — MRR**: `MRR = mean(1 / rank(first gold retrieval unit))`. Mean reciprocal rank of the first gold-bearing retrieval unit.
 
-Count invariant: `3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 = 24` algorithm relations; `24 + 4 = 28` independent mathematical relations.
+#### Family 11: relation superposition and version shadows (8)
+
+33. **UMD-F033 — Terminal-relation superposition**: `ΩΣ(r|q) = max(Ω_head(r|q), Ω_slot(r|q), Ω_cue(r|q))`. Retains answer-head, output-slot, and explicit relation evidence instead of allowing the first matching rule to hide other terminals.
+34. **UMD-F034 — Edge vacuum energy**: `ε(e|q) = 0.20 + min(3, contact(q,r_e)/5)` when the query supports the relation, and `−0.18` otherwise. Negative vacuum energy permits a necessary implicit bridge while suppressing irrelevant long paths.
+35. **UMD-F035 — Five-hop coverage collapse**: `E₃.₃₂(p|q) = Σ_{e∈p} ε(e|q) + 8 + 1.35ΩΣ(r_last|q) + 1.10|R(p)∩R(q)|/max(1,|R(q)|)`, for `|p| ≤ 5`. Terminal mass, query-relation coverage, and path energy jointly determine collapse.
+36. **UMD-F036 — Answer-path consensus**: `Consensus(a) = max_{p→a} E₃.₃₂(p|q) + min(0.45, 0.08(N_a−1))`. Independent paths to the same predicted object receive a bounded bonus, preventing path count from dominating without limit.
+37. **UMD-F037 — Equal-ordinal completeness selection**: `e*(s,r) = argmax_e (ordinal(e), |normalize(object_e)|, |provenance(e)|, object_e)`. When fragments and complete objects share `(subject, relation, ordinal)`, the more complete edge wins deterministically.
+38. **UMD-F038 — Version-shadow orbit**: `Shadow(a,s,r) = ⋃_{e_old∈History(s,r)} [Echo(object(e_old)) ∪ provenance(e_old)]`. Historical evidence follows the current answer echo, preserving evolution without allowing stale values to occupy rank one.
+39. **UMD-F039 — Adaptive closure horizon**: `B_closure = min(256, |Echo ∪ Shadow ∪ Dependency|)`. Final closure satellites are capped at 256 sources; the larger capacity is reported explicitly rather than presented as a pure ranking gain.
+40. **UMD-F040 — Strict atomic column unfolding**: `Strict₃.₃₂ = unique(Primary ⧺ Echo ⧺ Shadow ⧺ Dependency ⧺ Col(Result))`, where `Col` enumerates the first source of every capsule before their second source, and so on. Every Strict rank still contains exactly one source.
+
+#### Family 12: document stars and absorbing boundaries (6)
+
+41. **UMD-F041 — Overlap-window reconstruction**: `O* = mode{max_o suffix(W_i,o)=prefix(W_{i+1},o)}`, requiring at least 75% of adjacent windows to share `O*`. Long text is rebuilt only from a regular overlap stream.
+42. **UMD-F042 — Document-star moon set**: `Moon(D_j) = {i | span(W_i) ∩ span(D_j) ≠ ∅}`. A complete `Document N:` record is a star and its immutable overlapping windows are source moons.
+43. **UMD-F043 — Binary-star focal conservation**: `Final₁³·³³ = Final₁³·³² ∪ Moon(D_(1)) ∪ Moon(D_(2))`. The old first capsule is retained and receives the small moon sets of the top two documents.
+44. **UMD-F044 — Strict star-confidence gate**: `PromoteStrict = I[score(D₁)/max(ε,score(D₂)) ≥ 1.13]`. The best atomic moon is promoted only when the first document has a stable lead.
+45. **UMD-F045 — Complete-terminal absorption**: `Stop(p,q)=I[R_terminal(q) ⊆ R(p) ∧ r_last∈R_terminal(q)]`. Expansion stops after the path covers every query-supported terminal relation.
+46. **UMD-F046 — Cycle and repeated-relation energy**: `E_absorb(p)=E₃.₃₂(p)−1.25Σ_r max(0,count_p(r)−1)`; an edge is rejected when its next object is already in the path entity set.
+
+Count invariant: `3 + 3 + 7 + 2 + 2 + 2 + 2 + 1 + 2 + 4 + 8 + 6 = 42` algorithm relations; `42 + 4 = 46` independent mathematical relations.
 
 ### 5.1 Normalization and rank fusion
 
@@ -749,6 +847,8 @@ Formal definitions:
 
 Snapshot date: **2026-08-11**.
 
+The table normalizes reporting fields, not task difficulty. Benchmarks differ in task design, gold annotation, distractor density, and evaluable scope, so raw scores are not a common Elo ranking.
+
 | Benchmark | Evaluated scope | Final Any R@1 | Final Any R@10 | Final Full R@10 | Strict Any R@1 | Strict Any R@10 | Strict Full R@10 |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | LoCoMo | 1,982 | 0.5605 | 0.9082 | 0.8219 | 0.2861 | 0.7089 | 0.6060 |
@@ -757,7 +857,7 @@ Snapshot date: **2026-08-11**.
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
 | MemoryArena reuse | 1,714 | 0.9994 | 1.0000 | 1.0000 | 0.9708 | 1.0000 | 1.0000 |
-| MemoryAgentBench UMD 3.30 | 1,152 | 0.6727 | 0.9271 | 0.5712 | 0.5556 | 0.7812 | 0.2595 |
+| MemoryAgentBench UMD 3.33.1 | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
 | LongMemEval-V2 small | 230 | 0.9304 | 0.9870 | 0.5565 | 0.7652 | 0.9087 | 0.1174 |
 | EverMemBench-Dynamic | 202 | 0.8465 | 0.9802 | 0.4604 | 0.4406 | 0.9010 | 0.2327 |
 
@@ -774,6 +874,47 @@ Memora additionally reports state-sector exact-set rate `0.9925`, stale-value po
 | Strict Full R@10 | 0.1484 | 0.2595 | +0.1111 |
 
 The run covers 30/30 MemoryAgentBench contexts and 2,800 questions; 1,152 questions have answer-bearing sources locatable from frozen chunks. Accurate Retrieval cases remain unchanged; improvements come from multi-hop and conflicting facts in Conflict Resolution. The graph adds about `17.7%` runtime. On the largest measured structured context (1,119 chunks and 17,831 facts), steady graph memory is `5.92 MiB`, construction peak is `15.03 MiB`, and build time is `0.652 s`.
+
+### UMD 3.30 → 3.31 evidence-closure ablation
+
+The comparison uses the same 30/30 contexts and 1,152 evaluable questions.
+
+| Metric | 3.30 | 3.31 | Absolute delta |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.6727 | 0.7352 | +0.0625 |
+| Final Any R@10 | 0.9271 | 0.9306 | +0.0035 |
+| Final Full R@10 | 0.5712 | 0.6189 | +0.0477 |
+| Strict Any R@1 | 0.5556 | 0.6398 | +0.0842 |
+| Strict Any R@10 | 0.7812 | 0.8290 | +0.0477 |
+| Strict Full R@10 | 0.2595 | **0.4141** | **+0.1545** |
+
+Strict Full R@10 improves by `59.5%` relative. Accurate Retrieval is unchanged; Conflict Resolution Strict Full R@10 rises from `0.2737` to `0.4963`. Full runtime increases by `6.5%`. See `benchmarks/results/UMD331_EVIDENCE_CLOSURE_REPORT.md`.
+
+### UMD 3.31 → 3.32.1 relation-superposition ablation
+
+The comparison uses the same 30/30 contexts, frozen chunks, and 1,152 evaluable questions. Ranking remains gold-blind.
+
+| Metric | 3.31 | 3.32.1 | Absolute delta |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.7352 | **0.8281** | **+0.0929** |
+| Final Any R@10 | 0.9306 | **0.9653** | **+0.0347** |
+| Final Full R@10 | 0.6189 | **0.7526** | **+0.1337** |
+| Strict Any R@1 | 0.6398 | **0.7378** | **+0.0981** |
+| Strict Any R@10 | 0.8290 | **0.8880** | **+0.0590** |
+| Strict Full R@10 | 0.4141 | **0.5095** | **+0.0955** |
+
+The same-capacity 600-chunk run (603 evaluable questions) reaches Final Any R@1 `0.9370`, Final Full R@10 `0.9701`, Strict Any R@1 `0.9104`, and Strict Full R@10 `0.7065`; these capacity figures do not replace the full-run scores. Strict ranks carry exactly one source. Only 794 of the 1,152 full-run questions have at most ten gold sources, so the dataset's raw Strict Full R@10 ceiling is `794/1152 = 0.6892`; `0.99` is mathematically unreachable under this metric definition. On the 600-question Conflict Resolution capacity subset, raw Strict Full R@10 is `0.7050` against a `0.7450` ceiling, or `0.9463` ceiling-normalized. See `benchmarks/results/UMD3321_RELATION_SUPERPOSITION_REPORT.md` for complete results, rejected experiments, and integrity notes.
+
+### UMD 3.32.1 → 3.33.1 binary document-star ablation
+
+| Metric | 3.32.1 | 3.33.1 | Absolute delta |
+|---|---:|---:|---:|
+| Final Any R@1 | 0.8281 | **0.8681** | **+0.0399** |
+| Final Full R@10 | 0.7526 | **0.7813** | **+0.0286** |
+| Strict Any R@1 | 0.7378 | **0.7639** | **+0.0260** |
+| Strict Full R@10 | 0.5095 | **0.5200** | **+0.0104** |
+
+Using the actual 88-source ordinary-document budget and 296-source structured-closure budget, the subset-aware Final Full R@10 size ceiling is about `0.9531`; the result reaches `81.97%` of it. Strict Full `0.5200` reaches `75.44%` of its fixed `0.6892` ceiling. The checkpointed full run used about `1301.1 s`, roughly `38%` above the same-machine 3.32.1 observation. See `benchmarks/results/UMD3331_BINARY_STAR_REPORT.md`.
 
 ### Evaluation boundaries
 
@@ -811,19 +952,14 @@ python -m venv .venv
 # Linux/macOS: source .venv/bin/activate
 python -m pip install -r requirements-dev.txt
 python -m pytest -q \
-  benchmarks/umd316_adapter_test.py \
-  benchmarks/umd317_adapter_test.py \
-  benchmarks/umd318_adapter_test.py \
-  benchmarks/umd325_adapter_test.py \
-  benchmarks/umd326_adapter_test.py \
-  benchmarks/umd327_adapter_test.py \
-  benchmarks/umd329_performance_test.py \
-  benchmarks/umd330_adapter_test.py \
-  benchmarks/umd39_benchmarks_test.py
+  --ignore=benchmarks/vendor \
+  --ignore=benchmarks/vendor_exam \
+  --ignore=benchmarks/data \
+  --ignore=benchmarks/data_exam
 python scripts/verify_published_results.py
 ```
 
-Expected output: `72 passed` and `validated_results=10 gold_used_for_ranking=false status=pass`. GitHub Actions executes the same validation on Python 3.12/Linux.
+Expected for the current snapshot: `126 passed` and `validated_results=16 formula_relations=46 gold_used_for_ranking=false status=pass`. GitHub Actions executes the same validation on Python 3.12/Linux.
 
 Raw third-party benchmark data is not redistributed. See [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) for data layout, commands, hashes, and caveats; formal manifests are under [`benchmarks/results/`](benchmarks/results/).
 

@@ -145,6 +145,80 @@ Breadth-first traversal is capped at three edges. The winning terminal fact is p
 
 with at most 96 appended satellites. No gold answer or evidence ID is used in this calculation.
 
+## 10.1 UMD 3.31 evidence closure / UMD 3.31 证据闭包
+
+UMD 3.31 first infers the relation requested by the question's output slot. / UMD 3.31 首先从问题的输出槽识别最终要求的关系：
+
+`Ω(r|q) = 1 − 0.08 × position(r)`
+
+An unmatched legacy relation cue receives fallback mass `0.50`. The output-slot relation, not the longest cue anywhere in the question, defines the terminal boundary. / 未匹配显式输出槽时，旧版关系线索的回退质量为 `0.50`；终点由输出槽而不是问题中最长的任意线索决定。
+
+The bounded closure energy is: / 有界闭包路径能量为：
+
+`E₃.₃₁(p|q) = Σ[0.20 + min(3, contact(q,r)/5)] + 8 + Ω(r_last|q)`
+
+where `r_last ∈ output_slot(q)` and `|p| ≤ 4`. The closure orbit is: / 其中 `r_last ∈ output_slot(q)` 且 `|p| ≤ 4`。闭包轨道为：
+
+`Closure(a,p,t) = Primary(a) ∪ Echo(a,t) ∪ ⋃_{e∈p\{e_answer}} provenance(e)`
+
+Strict retrieval remains one immutable source per rank: / 严格检索仍保持每个名次一个不可变来源：
+
+`Strict₃.₃₁ = unique(Primary ⧺ Echo ⧺ Dependency ⧺ Strict₃.₃₀)`
+
+The graph accepts only the query and visible source text. Gold answers and evidence identifiers are evaluator-only and are not parameters of these formulas. / 图只接收查询和当前可见来源文本；gold 答案与证据编号只属于评测器，不是公式输入。
+
+## 10.2 UMD 3.32.1 relation superposition / UMD 3.32.1 关系叠加
+
+UMD 3.32.1 retains every compatible answer-head, output-slot, and explicit relation hypothesis: / UMD 3.32.1 同时保留答案头、输出槽与显式关系线索：
+
+`ΩΣ(r|q) = max(Ω_head(r|q), Ω_slot(r|q), Ω_cue(r|q))`
+
+Each supported edge receives positive contact energy; an unsupported bridge receives a small negative vacuum energy instead of being forbidden: / 查询支持的边获得正接触能，必要的隐含桥获得小幅负真空能而不是被完全禁止：
+
+`ε(e|q) = 0.20 + min(3, contact(q,r_e)/5)` if supported, otherwise `−0.18`.
+
+The bounded five-hop collapse energy and object consensus are: / 有界五跳坍缩能与对象共识为：
+
+`E₃.₃₂(p|q) = Σ_{e∈p} ε(e|q) + 8 + 1.35ΩΣ(r_last|q) + 1.10|R(p)∩R(q)|/max(1,|R(q)|)`
+
+`Consensus(a) = max_{p→a} E₃.₃₂(p|q) + min(0.45, 0.08(N_a−1))`
+
+Equal-ordinal fragments are resolved by deterministic completeness: / 同序碎片由确定性完整度消歧：
+
+`e*(s,r) = argmax_e (ordinal(e), |normalize(object_e)|, |provenance(e)|, object_e)`
+
+Historical values form a shadow orbit after the current answer echo: / 历史值在当前答案回声之后形成版本影子轨道：
+
+`Shadow(a,s,r) = ⋃_{e_old∈History(s,r)} [Echo(object(e_old)) ∪ provenance(e_old)]`
+
+Final closure satellites are capped explicitly, while Strict remains atomic and uses capsule-column unfolding: / Final 闭包卫星显式设限，Strict 仍为单来源并采用胶囊列展开：
+
+`B_closure = min(256, |Echo ∪ Shadow ∪ Dependency|)`
+
+`Strict₃.₃₂ = unique(Primary ⧺ Echo ⧺ Shadow ⧺ Dependency ⧺ Col(Result))`
+
+The graph still receives only query and visible source text. The 256-source Final budget changes capacity and must be disclosed separately from ranking gains; Strict never widens its ranking units. / 图仍只接收查询和可见来源文本。Final 的 256 来源预算属于容量变化，必须与排名增益分开披露；Strict 排名单元从不加宽。
+
+## 10.3 UMD 3.33.1 document stars and absorption / UMD 3.33.1 文档恒星与吸收
+
+For a regular overlap stream, infer the dominant exact overlap and reconstruct complete `Document N:` stars: / 对规则重叠窗口流，推断主导精确重叠并重建完整文档恒星：
+
+`O* = mode{max_o suffix(W_i,o)=prefix(W_{i+1},o)}`
+
+`Moon(D_j) = {i | span(W_i) ∩ span(D_j) ≠ ∅}`
+
+The first Final capsule conserves its old sources and adds the two strongest document-star moon sets. Strict promotion requires a `1.13` score ratio: / Final 首胶囊保留旧来源并追加前两个文档恒星的卫星；Strict 提升要求 `1.13` 分数比：
+
+`Final₁³·³³ = Final₁³·³² ∪ Moon(D_(1)) ∪ Moon(D_(2))`
+
+`PromoteStrict = I[score(D₁)/max(ε,score(D₂)) ≥ 1.13]`
+
+Structured paths stop after complete terminal coverage, reject entity cycles, and penalize repeated relations: / 结构化路径在完整终点覆盖后停止，拒绝实体循环并惩罚重复关系：
+
+`Stop(p,q)=I[R_terminal(q) ⊆ R(p) ∧ r_last∈R_terminal(q)]`
+
+`E_absorb(p)=E₃.₃₂(p)−1.25Σ_r max(0,count_p(r)−1)`
+
 ## 11. Retrieval metrics / 检索指标
 
 For gold evidence set `Y` and the union of sources in the first `k` retrieval units `R_k`:
@@ -161,6 +235,5 @@ Final capsule and strict atomic metrics must always be reported separately.
 - BM25 scoring is sparse in query postings plus an `O(n)` output vector.
 - Neural scoring is bounded by the lexical candidate pool (64 in the published frozen exam).
 - Marginal coverage is bounded to 192 candidates; UMD 3.29 replaces large repeated set algebra with incremental postings.
-- Slingshot construction is linear in parsed facts and uses a sparse subject adjacency map; traversal is capped at three hops.
+- Slingshot/closure construction is linear in parsed facts and uses a sparse subject adjacency map; traversal is capped at three hops in UMD 3.30, four in 3.31, and five in 3.32.1.
 - On the largest measured structured context (1,119 chunks, 17,831 facts), the slingshot graph used 5.92 MiB steady Python memory, 15.03 MiB construction peak and 0.652 seconds to build.
-

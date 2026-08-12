@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,12 @@ FILES: dict[str, tuple[str, int]] = {
     "umd329_exam_longmemeval_v2_full.json": ("longmemeval_v2", 451),
     "umd329_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
     "umd330_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
+    "umd330_exam_memoryagentbench_capacity_600.json": ("memoryagentbench", 1600),
+    "umd331_exam_memoryagentbench_capacity.json": ("memoryagentbench", 1600),
+    "umd331_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
+    "umd3321_exam_memoryagentbench_capacity.json": ("memoryagentbench", 1600),
+    "umd3321_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
+    "umd3331_exam_memoryagentbench_full.json": ("memoryagentbench", 2800),
 }
 
 
@@ -50,7 +57,23 @@ def _assert_probability_tree(value: Any, path: str = "root") -> None:
             _assert_probability_tree(child, f"{path}[{index}]")
 
 
+def _assert_formula_registry() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    english_start = readme.index("### 5.0 English formula registry")
+    expected = list(range(1, 47))
+    for name, section in (
+        ("Chinese", readme[:english_start]),
+        ("English", readme[english_start:]),
+    ):
+        identifiers = [
+            int(value)
+            for value in re.findall(r"^\d+\. \*\*UMD-F(\d{3})", section, re.MULTILINE)
+        ]
+        assert identifiers == expected, f"{name} formula registry: {identifiers}"
+
+
 def main() -> None:
+    _assert_formula_registry()
     validated = 0
     for filename, (root_key, expected_questions) in FILES.items():
         path = RESULTS / filename
@@ -66,7 +89,10 @@ def main() -> None:
         assert ranking_flag is False, filename
         _assert_probability_tree(result, filename)
         validated += 1
-    print(f"validated_results={validated} gold_used_for_ranking=false status=pass")
+    print(
+        f"validated_results={validated} formula_relations=46 "
+        "gold_used_for_ranking=false status=pass"
+    )
 
 
 if __name__ == "__main__":
