@@ -49,6 +49,7 @@ benchmarks/results/*
 !benchmarks/results/UMD331_EVIDENCE_CLOSURE_REPORT.md
 !benchmarks/results/UMD3321_RELATION_SUPERPOSITION_REPORT.md
 !benchmarks/results/UMD3331_BINARY_STAR_REPORT.md
+!benchmarks/results/UMD334_QUERY_FISSION_REPORT.md
 !benchmarks/results/umd3282_exam_locomo.json
 !benchmarks/results/umd3282_exam_longmemeval.json
 !benchmarks/results/umd3282_exam_membench.json
@@ -66,6 +67,12 @@ benchmarks/results/*
 !benchmarks/results/umd3321_exam_memoryagentbench_capacity.json
 !benchmarks/results/umd3321_exam_memoryagentbench_full.json
 !benchmarks/results/umd3331_exam_memoryagentbench_full.json
+!benchmarks/results/umd334_longmemeval_holdout400.json
+!benchmarks/results/umd334_longmemeval_full_replay.json
+!benchmarks/results/umd335_longmemeval_full_regression.json
+!benchmarks/results/UMD335_GHOST_MATTER_REPORT.md
+!benchmarks/results/umd336_longmemeval_full_regression.json
+!benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md
 
 # Frontend/build output
 node_modules/

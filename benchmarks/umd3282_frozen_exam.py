@@ -47,6 +47,9 @@ def _index(
     encoder: FastEmbedEncoder, dates: Sequence[str] | None = None,
     *, physics_v330: bool = False, physics_v331: bool = False,
     physics_v332: bool = False, physics_v333: bool = False,
+    physics_v334: bool = False,
+    physics_v335: bool = False,
+    physics_v336: bool = False,
 ) -> OrbitIndex:
     return OrbitIndex(
         texts, groups, source_ids, encoder, dates,
@@ -56,10 +59,13 @@ def _index(
         physics_v325=True,
         physics_v326=True,
         physics_v327=True,
-        physics_v330=physics_v330 or physics_v331 or physics_v332 or physics_v333,
-        physics_v331=physics_v331 or physics_v332 or physics_v333,
-        physics_v332=physics_v332 or physics_v333,
-        physics_v333=physics_v333,
+        physics_v330=physics_v330 or physics_v331 or physics_v332 or physics_v333 or physics_v334 or physics_v335 or physics_v336,
+        physics_v331=physics_v331 or physics_v332 or physics_v333 or physics_v334 or physics_v335 or physics_v336,
+        physics_v332=physics_v332 or physics_v333 or physics_v334 or physics_v335 or physics_v336,
+        physics_v333=physics_v333 or physics_v334 or physics_v335 or physics_v336,
+        physics_v334=physics_v334 or physics_v335 or physics_v336,
+        physics_v335=physics_v335 or physics_v336,
+        physics_v336=physics_v336,
         first_orbit_v316=False,
     )
 
@@ -203,13 +209,28 @@ def _long_session_text(item: dict[str, Any], number: int) -> str:
     )
 
 
-def run_longmemeval(encoder: FastEmbedEncoder) -> dict[str, Any]:
+def run_longmemeval(
+    encoder: FastEmbedEncoder, *, physics_v334: bool = False,
+    physics_v335: bool = False,
+    physics_v336: bool = False,
+    question_start: int = 0, question_limit: int | None = None,
+) -> dict[str, Any]:
     started = time.perf_counter()
     path = DATA / "longmemeval_s_cleaned.json"
     dataset = json.loads(path.read_text(encoding="utf-8"))
-    checkpoint_path = RESULTS / "umd3282_exam_longmemeval_checkpoint.json"
+    checkpoint_path = RESULTS / (
+        "umd336_longmemeval_checkpoint.json"
+        if physics_v336 else "umd335_longmemeval_checkpoint.json"
+        if physics_v335 else
+        "umd334_longmemeval_checkpoint.json"
+        if physics_v334 else "umd3282_exam_longmemeval_checkpoint.json"
+    )
     checkpoint = _checkpoint(checkpoint_path)
-    for number, item in enumerate(dataset):
+    start = min(max(0, int(question_start)), len(dataset))
+    stop = len(dataset) if question_limit is None else min(len(dataset), start + max(0, int(question_limit)))
+    selected_numbers = list(range(start, stop))
+    for number in selected_numbers:
+        item = dataset[number]
         key = str(number)
         if key in checkpoint:
             if (number + 1) % 10 == 0:
@@ -217,7 +238,12 @@ def run_longmemeval(encoder: FastEmbedEncoder) -> dict[str, Any]:
             continue
         ids = [str(value) for value in item["haystack_session_ids"]]
         texts = [_long_session_text(item, index) for index in range(len(ids))]
-        index = _index(texts, list(range(len(ids))), ids, encoder, item["haystack_dates"])
+        index = _index(
+            texts, list(range(len(ids))), ids, encoder, item["haystack_dates"],
+            physics_v334=physics_v334 or physics_v335 or physics_v336,
+            physics_v335=physics_v335 or physics_v336,
+            physics_v336=physics_v336,
+        )
         question = str(item["question"])
         # Frozen ranking happens before answer_session_ids is read.
         channels = index.retrieve_compact_channels(question)
@@ -234,15 +260,22 @@ def run_longmemeval(encoder: FastEmbedEncoder) -> dict[str, Any]:
             "final_chars_at_10": sum(len(texts[ids.index(source)]) for source in {source for capsule in final_capsules[:10] for source in capsule} if source in ids),
             "strict_chars_at_10": sum(len(texts[ids.index(source)]) for source in {source for capsule in strict_capsules[:10] for source in capsule} if source in ids),
         }
-        if (number + 1) % 10 == 0 or number + 1 == len(dataset):
+        if (number + 1) % 10 == 0 or number == selected_numbers[-1]:
             _write_checkpoint(checkpoint_path, checkpoint)
             print(f"LongMemEval exam progress: {number + 1}/{len(dataset)}", flush=True)
-    records = [checkpoint[str(number)] for number in range(len(dataset))]
+    records = [checkpoint[str(number)] for number in selected_numbers]
     answerable = [record for record in records if not record["is_abstention"] and record["has_evidence"]]
     all_evidence = [record for record in records if record["has_evidence"]]
     question_types = sorted({record["question_type"] for record in answerable})
     return {
         "benchmark": "LongMemEval_S_cleaned",
+        "umd_version": (
+            "3.36-post-evaluation-regression" if physics_v336
+            else "3.35-post-evaluation-regression" if physics_v335
+            else "3.34-development-replay" if physics_v334
+            else "3.28.2-frozen"
+        ),
+        "question_slice": {"start": start, "stop": stop},
         "questions": len(records),
         "answerable_questions": len(answerable),
         "abstention_questions": sum(record["is_abstention"] for record in records),
@@ -320,14 +353,33 @@ def main() -> None:
     parser.add_argument("--benchmark", choices=("locomo", "longmemeval", "membench", "memora"), required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--membench-per-group", type=int, default=10)
+    parser.add_argument("--physics-v334", action="store_true")
+    parser.add_argument("--physics-v335", action="store_true")
+    parser.add_argument("--physics-v336", action="store_true")
+    parser.add_argument("--question-start", type=int, default=0)
+    parser.add_argument("--question-limit", type=int)
+    parser.add_argument(
+        "--frozen-holdout", action="store_true",
+        help="Mark a predeclared post-development slice as parameter-frozen.",
+    )
     args = parser.parse_args()
+    if args.frozen_holdout and (
+        not (args.physics_v334 or args.physics_v335 or args.physics_v336)
+        or args.question_start < 100
+    ):
+        parser.error("--frozen-holdout requires UMD 3.34+ and --question-start >= 100")
     encoder = FastEmbedEncoder(
         cache_dir=MODEL_CACHE, batch_size=128, cache_size=32768, threads=16,
     )
     if args.benchmark == "locomo":
         result = run_locomo(encoder)
     elif args.benchmark == "longmemeval":
-        result = run_longmemeval(encoder)
+        result = run_longmemeval(
+            encoder, physics_v334=args.physics_v334,
+            physics_v335=args.physics_v335,
+            physics_v336=args.physics_v336,
+            question_start=args.question_start, question_limit=args.question_limit,
+        )
     elif args.benchmark == "membench":
         result = run_membench(encoder, args.membench_per_group)
     else:
@@ -338,10 +390,21 @@ def main() -> None:
     payload = {
         args.benchmark: result,
         "metadata": {
-            "adapter": "UMD 3.28.2 frozen exam",
+            "adapter": (
+                "UMD 3.36 post-evaluation regression: bounded ghost constellations"
+                if args.physics_v336 else
+                "UMD 3.35 post-evaluation regression: background ghost matter"
+                if args.physics_v335 else
+                "UMD 3.34 post-dataset development replay: query fission and semantic periapsis"
+                if args.physics_v334 else "UMD 3.28.2 frozen exam"
+            ),
             "gold_read_after_retrieval": True,
             "gold_used_for_ranking": False,
-            "parameters_frozen": True,
+            "parameters_frozen": (
+                not (args.physics_v334 or args.physics_v335 or args.physics_v336)
+                or bool(args.frozen_holdout)
+            ),
+            "post_development_holdout": bool(args.frozen_holdout),
             "paid_api_calls": 0,
             "official_answer_or_judge_model": None,
             "encoder": encoder.metadata(),
