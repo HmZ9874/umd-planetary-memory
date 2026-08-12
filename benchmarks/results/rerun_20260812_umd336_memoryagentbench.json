@@ -1,0 +1,193 @@
+{
+  "memoryagentbench": {
+    "benchmark": "MemoryAgentBench",
+    "umd_version": "3.36",
+    "status": "official_data_answer_bearing_retrieval_proxy",
+    "competencies_run": [
+      "Accurate Retrieval",
+      "Conflict Resolution"
+    ],
+    "competencies_not_scored": [
+      "Test-Time Learning",
+      "Long-Range Understanding"
+    ],
+    "chunk_chars": 1200,
+    "chunk_overlap": 200,
+    "max_chunks_per_context": null,
+    "contexts_total": 30,
+    "contexts_run": 30,
+    "contexts_skipped_for_capacity": 0,
+    "questions_skipped_for_capacity": 0,
+    "questions": 2800,
+    "answer_bearing_questions": 1152,
+    "by_competency": {
+      "Accurate_Retrieval": {
+        "questions": 2000,
+        "answer_bearing_questions": 352,
+        "no_answer_bearing_passage": 1648,
+        "chunks": 26971,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 352,
+          "gold_evidence_items": 19585,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.7978298611111111,
+          "any_evidence_recall": {
+            "1": 0.7443181818181818,
+            "5": 0.8693181818181818,
+            "10": 0.9318181818181818
+          },
+          "full_evidence_recall": {
+            "1": 0.2528409090909091,
+            "5": 0.35511363636363635,
+            "10": 0.4630681818181818
+          },
+          "micro_evidence_recall": {
+            "1": 0.10385499106459024,
+            "5": 0.11953025274444729,
+            "10": 0.1340311462854225
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 352,
+          "gold_evidence_items": 19585,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.5922681154863272,
+          "any_evidence_recall": {
+            "1": 0.48579545454545453,
+            "5": 0.71875,
+            "10": 0.78125
+          },
+          "full_evidence_recall": {
+            "1": 0.12215909090909091,
+            "5": 0.2471590909090909,
+            "10": 0.29829545454545453
+          },
+          "micro_evidence_recall": {
+            "1": 0.008731171815164666,
+            "5": 0.020679091141179475,
+            "10": 0.02833801378606076
+          }
+        }
+      },
+      "Conflict_Resolution": {
+        "questions": 800,
+        "answer_bearing_questions": 800,
+        "no_answer_bearing_passage": 0,
+        "chunks": 3114,
+        "final_capsule_retrieval": {
+          "evaluated_queries": 800,
+          "gold_evidence_items": 26648,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9416195436507937,
+          "any_evidence_recall": {
+            "1": 0.9225,
+            "5": 0.97,
+            "10": 0.9875
+          },
+          "full_evidence_recall": {
+            "1": 0.24,
+            "5": 0.465,
+            "10": 0.92125
+          },
+          "micro_evidence_recall": {
+            "1": 0.10391023716601622,
+            "5": 0.39124887421194837,
+            "10": 0.7010657460222155
+          }
+        },
+        "strict_source_atomic_retrieval": {
+          "evaluated_queries": 800,
+          "gold_evidence_items": 26648,
+          "retrieval_unit": "evidence_capsule",
+          "mrr": 0.9069979086306895,
+          "any_evidence_recall": {
+            "1": 0.88625,
+            "5": 0.93125,
+            "10": 0.94875
+          },
+          "full_evidence_recall": {
+            "1": 0.1875,
+            "5": 0.49625,
+            "10": 0.6175
+          },
+          "micro_evidence_recall": {
+            "1": 0.0266061242870009,
+            "5": 0.09685529870909637,
+            "10": 0.1521314920444311
+          }
+        }
+      }
+    },
+    "final_capsule_retrieval": {
+      "evaluated_queries": 1152,
+      "gold_evidence_items": 46233,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8976838073192239,
+      "any_evidence_recall": {
+        "1": 0.8680555555555556,
+        "5": 0.9392361111111112,
+        "10": 0.9704861111111112
+      },
+      "full_evidence_recall": {
+        "1": 0.2439236111111111,
+        "5": 0.4314236111111111,
+        "10": 0.78125
+      },
+      "micro_evidence_recall": {
+        "1": 0.10388683407955357,
+        "5": 0.2761447450954946,
+        "10": 0.4608612895550797
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 1152,
+      "gold_evidence_items": 46233,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 0.8108304718365789,
+      "any_evidence_recall": {
+        "1": 0.7638888888888888,
+        "5": 0.8663194444444444,
+        "10": 0.8975694444444444
+      },
+      "full_evidence_recall": {
+        "1": 0.1675347222222222,
+        "5": 0.4201388888888889,
+        "10": 0.5199652777777778
+      },
+      "micro_evidence_recall": {
+        "1": 0.019034023316678562,
+        "5": 0.06458590184500249,
+        "10": 0.09969069712110397
+      }
+    },
+    "official_end_to_end_accuracy_run": false,
+    "gold_used_for_ranking": false,
+    "data_sha256": {
+      "Accurate_Retrieval": "56c3cd80fb6731a3e53cd1a6be3148f54df60ff2d290ee50e28f8acebf9655c1",
+      "Conflict_Resolution": "24d5c3f09ce0ce15625cb9f8a98f44f0d864ca6c94d7b4ad04eb697ca3a5ff45"
+    },
+    "runtime_seconds": 2558.8471714000043
+  },
+  "metadata": {
+    "adapter": "UMD 3.36 bounded ghost constellations / UMD 3.35 provenance-safe background ghost matter / UMD 3.34 query fission and episodic semantic periapsis / UMD 3.33.1 binary document stars and absorbing relation boundary / UMD 3.32.1 relation superposition and version shadows / UMD 3.31 evidence closure / UMD 3.30 slingshot / UMD 3.28.2 conserved control laws",
+    "full_run": true,
+    "run_id": "rerun20260812a",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": true,
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 24192,
+      "cache_hits": 27575,
+      "cache_misses": 24192,
+      "neural_calls": 24192,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

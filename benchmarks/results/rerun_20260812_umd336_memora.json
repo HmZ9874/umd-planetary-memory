@@ -1,0 +1,214 @@
+{
+  "memora": {
+    "benchmark": "Memora",
+    "status": "umd3282_phase_bounded_three_orbit_retrieval_proxy",
+    "questions": 600,
+    "completed_persona_periods": 30,
+    "sampling": "personas 0:10 per period",
+    "memory_presence_retrieval": {
+      "evaluated_queries": 398,
+      "gold_evidence_items": 11825,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 1.0,
+      "any_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "full_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "micro_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    "strict_source_atomic_retrieval": {
+      "evaluated_queries": 398,
+      "gold_evidence_items": 11825,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 1.0,
+      "any_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "full_evidence_recall": {
+        "1": 0.10552763819095477,
+        "5": 0.4371859296482412,
+        "10": 0.5904522613065326
+      },
+      "micro_evidence_recall": {
+        "1": 0.03365750528541226,
+        "5": 0.13395348837209303,
+        "10": 0.21513742071881606
+      }
+    },
+    "legacy_striped_capsule_retrieval": {
+      "evaluated_queries": 398,
+      "gold_evidence_items": 11825,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 1.0,
+      "any_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "full_evidence_recall": {
+        "1": 0.10552763819095477,
+        "5": 0.4371859296482412,
+        "10": 1.0
+      },
+      "micro_evidence_recall": {
+        "1": 0.11856236786469344,
+        "5": 0.5429175475687104,
+        "10": 1.0
+      }
+    },
+    "state_sector_capsule_retrieval": {
+      "evaluated_queries": 398,
+      "gold_evidence_items": 11825,
+      "retrieval_unit": "evidence_capsule",
+      "mrr": 1.0,
+      "any_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "full_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      },
+      "micro_evidence_recall": {
+        "1": 1.0,
+        "5": 1.0,
+        "10": 1.0
+      }
+    },
+    "strict_source_full_r1_ceiling": 0.10552763819095477,
+    "state_sector_audit": {
+      "evaluated_queries": 398,
+      "mean_sources": 29.718592964824122,
+      "micro_precision": 0.9997463645586744,
+      "exact_set_rate": 0.992462311557789
+    },
+    "umd326_control": null,
+    "by_period": {
+      "monthly": {
+        "evaluated_queries": 106,
+        "gold_evidence_items": 2303,
+        "retrieval_unit": "evidence_capsule",
+        "mrr": 1.0,
+        "any_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "full_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "micro_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        }
+      },
+      "quarterly": {
+        "evaluated_queries": 180,
+        "gold_evidence_items": 8787,
+        "retrieval_unit": "evidence_capsule",
+        "mrr": 1.0,
+        "any_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "full_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "micro_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        }
+      },
+      "weekly": {
+        "evaluated_queries": 112,
+        "gold_evidence_items": 735,
+        "retrieval_unit": "evidence_capsule",
+        "mrr": 1.0,
+        "any_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "full_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        },
+        "micro_evidence_recall": {
+          "1": 1.0,
+          "5": 1.0,
+          "10": 1.0
+        }
+      }
+    },
+    "forgetting_evidence_queries": 396,
+    "forgetting_session_contamination_at_10": 0.3888888888888889,
+    "forgetting_value_contamination_at_10": 0.0,
+    "irreducible_mixed_session_floor_at_10": 0.3484848484848485,
+    "compact_census": {
+      "queries": 450,
+      "mean_raw_chars": 32319.633333333335,
+      "mean_payload_chars": 5891.328888888889,
+      "compression_ratio": 0.18228328360435883
+    },
+    "structured_ledger": {
+      "queries": 600,
+      "mean_matched_sources": 28.725,
+      "mean_source_budget": 74.81833333333333,
+      "fact_provenance_items": 177479,
+      "fast_path_queries": 448,
+      "fast_path_rate": 0.7466666666666667
+    },
+    "deterministic_answer_validation": {
+      "evaluated_queries": 107,
+      "correct": 107,
+      "accuracy": 1.0
+    },
+    "umd326_control_forgetting_contamination_at_10": null,
+    "official_fama_run": false,
+    "runtime_seconds": 265.18634369999927
+  },
+  "metadata": {
+    "adapter": "UMD 3.36 post-evaluation regression: bounded ghost constellations",
+    "gold_read_after_retrieval": true,
+    "gold_used_for_ranking": false,
+    "parameters_frozen": false,
+    "post_development_holdout": false,
+    "run_id": "rerun20260812a",
+    "paid_api_calls": 0,
+    "official_answer_or_judge_model": null,
+    "encoder": {
+      "backend": "fastembed-onnx",
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "dimensions": 384,
+      "loaded": true,
+      "cache_entries": 3310,
+      "cache_hits": 45,
+      "cache_misses": 3310,
+      "neural_calls": 3310,
+      "fallback_calls": 0,
+      "last_error": null
+    }
+  }
+}

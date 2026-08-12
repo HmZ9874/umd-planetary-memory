@@ -21,7 +21,7 @@
 
 The 500-question run contains 470 answerable questions. Relative to UMD 3.35, Final Full R@1 improves on 67 questions with zero regressions; Final@10 character cost and every Strict metric are unchanged. This is a gold-blind-ranking evidence-retrieval proxy developed after inspecting the benchmark, not a blind test, official end-to-end answer score, or leaderboard submission. / 500 题中有 470 题可回答；相对 UMD 3.35，Final Full R@1 改善 67 题、回退 0 题，Final@10 字符成本与全部 Strict 指标保持不变。这是排序阶段不读取 gold 的证据检索代理，但参数在检查 benchmark 后开发，不是盲测、官方端到端答案分数或排行榜提交。
 
-[Full bilingual report / 完整双语报告](benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md) · [Raw result JSON / 原始结果](benchmarks/results/umd336_longmemeval_full_regression.json)
+[Full bilingual report / 完整双语报告](benchmarks/results/UMD336_GHOST_CONSTELLATION_REPORT.md) · [Raw result JSON / 原始结果](benchmarks/results/umd336_longmemeval_full_regression.json) · [2026-08-12 isolated cold rerun / 隔离冷启动复测](benchmarks/UMD336_RERUN_20260812_REPORT.md)
 
 ## Formula inventory / 公式总览
 
@@ -440,7 +440,7 @@ UMD 3.29 不改变公式，只增量维护重叠质量：
 
 ## 7. 公开成绩
 
-快照日期：**2026-08-11**。
+快照日期：**2026-08-12**。下表全部 12 行已使用隔离 `run_id` 与全新 checkpoint 冷启动复测，展示值均被逐项复现；完整报告和原始 JSON 见 [隔离复测报告](benchmarks/UMD336_RERUN_20260812_REPORT.md)。
 
 下表统一展示检索口径，但不同 benchmark 的任务、gold 标注、干扰密度和可评估范围不同，raw score 不能当作统一 Elo 排名。
 
@@ -455,11 +455,13 @@ UMD 3.29 不改变公式，只增量维护重叠质量：
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
 | MemoryArena reuse | 1,714 | 0.9994 | 1.0000 | 1.0000 | 0.9708 | 1.0000 | 1.0000 |
-| MemoryAgentBench UMD 3.33.1 | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
+| MemoryAgentBench UMD 3.36 复测 | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
 | LongMemEval-V2 small | 230 | 0.9304 | 0.9870 | 0.5565 | 0.7652 | 0.9087 | 0.1174 |
 | EverMemBench-Dynamic | 202 | 0.8465 | 0.9802 | 0.4604 | 0.4406 | 0.9010 | 0.2327 |
 
 Memora 还得到状态扇区 exact-set rate `0.9925`、旧值污染率 `0.0`，确定性聚合答案验证 `107/107`。
+
+MemoryArena 的高分必须结合分布解释：4,149 个连续查询中只有 1,714 个具有可验证的历史答案组件复用并进入计分，其中 1,599 个（`93.29%`）来自取得满分的 `group_travel_planner`。因此 `Final Any R@1=0.9994` 是“前序答案组件复用检索”成绩，不是五种环境的宏平均，也不是 Agent 环境任务成功率。`formal_reasoning_phys` 和 `progressive_search` 在当前代理定义下没有查询进入计分。
 
 ### UMD 3.29 → 3.30 消融
 
@@ -931,7 +933,7 @@ Formal definitions:
 
 ## 7. Public results
 
-Snapshot date: **2026-08-11**.
+Snapshot date: **2026-08-12**. All 12 rows below were cold-rerun with isolated `run_id` values and fresh checkpoints; every displayed value was reproduced. See the [isolated rerun report](benchmarks/UMD336_RERUN_20260812_REPORT.md) and its published raw JSON files.
 
 The table normalizes reporting fields, not task difficulty. Benchmarks differ in task design, gold annotation, distractor density, and evaluable scope, so raw scores are not a common Elo ranking.
 
@@ -946,11 +948,13 @@ The table normalizes reporting fields, not task difficulty. Benchmarks differ in
 | Memora | 398 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.5905 |
 | MemoryBench DialSim | 34 | 0.4118 | 0.8824 | 0.2647 | 0.2353 | 0.3235 | 0.0000 |
 | MemoryArena reuse | 1,714 | 0.9994 | 1.0000 | 1.0000 | 0.9708 | 1.0000 | 1.0000 |
-| MemoryAgentBench UMD 3.33.1 | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
+| MemoryAgentBench UMD 3.36 rerun | 1,152 | 0.8681 | 0.9705 | 0.7813 | 0.7639 | 0.8976 | 0.5200 |
 | LongMemEval-V2 small | 230 | 0.9304 | 0.9870 | 0.5565 | 0.7652 | 0.9087 | 0.1174 |
 | EverMemBench-Dynamic | 202 | 0.8465 | 0.9802 | 0.4604 | 0.4406 | 0.9010 | 0.2327 |
 
 Memora additionally reports state-sector exact-set rate `0.9925`, stale-value pollution `0.0`, and `107/107` deterministic aggregate-answer validations.
+
+The MemoryArena result requires a distribution caveat. Only 1,714 of 4,149 sequential queries have verifiable reuse of prior answer components and enter scoring; 1,599 of those (`93.29%`) come from the perfect-scoring `group_travel_planner` environment. `Final Any R@1=0.9994` therefore measures prior-answer-component reuse retrieval, not a five-environment macro average or agent-environment task success. Under the current proxy definition, no `formal_reasoning_phys` or `progressive_search` query enters scoring.
 
 ### UMD 3.29 → 3.30 ablation
 
